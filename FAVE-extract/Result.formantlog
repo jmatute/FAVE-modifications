@@ -1,0 +1,83 @@
+Sun Feb 18 12:17:15 2018
+Not using Git version control. Version info unavailable.
+Consider installing Git (http://git-scm.com/).         and cloning this repository from GitHub with: 
+          git clone git@github.com:JoFrhwld/FAVE.git
+
+
+extractFormants statistics for file ARI_Dass_I_word_list.wav:
+
+Total number of vowels (initially):	29
+->	Number of vowels analyzed:	29	(100.0%)
+->	Number of vowels discarded:	0	(0.0%)
+
+Duration of sound file:		43.100 seconds
+Time for program run:		6.208 seconds
+->	0.214 seconds per analyzed vowel
+->	0.144 times real time
+
+Excluded:
+- Uncertain transcriptions:		0	(0.0%)
+- Overlaps:				0	(0.0%)
+- Truncated words:			0	(0.0%)
+- Below minimum duration:		0	(0.0%)
+
+
+extractFormant settings:
+- removeStopWords:		False
+- measureUnstressed:		True
+- minVowelDuration:		0.050
+- formantPredictionMethod:	mahalanobis
+- measurementPointMethod:	faav
+- nFormants:			5
+- maxFormant:			5500
+- nSmoothing:			12
+- windowSize:			0.025
+- preEmphasis:			50
+- speechSoftware:		Praat
+- outputFormat:			txt
+- outputHeader:			True
+- case:				upper
+- multipleFiles:		False
+- meansFile:			means.txt
+- covsFile:			covs.txt
+- remeasurement:		False
+- vowelSystem:		NorthAmerican
+- pickle		False
+
+
+Time statistics:
+
+count	time	d(time)	token
+start	1518952629.62	
+prelim1	1518952629.63	0.004	
+prelim2	1518952629.63	0.004	
+1	1518952629.63	0.0	AE1 in THAT
+2	1518952629.99	0.362	AA0 in COMMA
+3	1518952630.2	0.209	AH0 in COMMA
+4	1518952630.51	0.307	AA0 in HOT
+5	1518952630.79	0.276	UW1 in TOOTH
+6	1518952631.02	0.231	EH1 in BETTER
+7	1518952631.13	0.118	ER0 in BETTER
+8	1518952631.29	0.155	ER1 in HURT
+9	1518952631.48	0.192	AW1 in HOUSE
+10	1518952631.75	0.268	IH0 in HEAR
+11	1518952632.2	0.452	AO1 in THOUGHT
+12	1518952632.47	0.272	AW1 in TOWN
+13	1518952632.74	0.269	AE1 in HAT
+14	1518952632.97	0.229	UH1 in PUT
+15	1518952633.14	0.172	IY1 in HEAT
+16	1518952633.43	0.286	EH0 in QUESTION
+17	1518952633.59	0.156	AH0 in QUESTION
+18	1518952633.73	0.146	AH1 in HUT
+19	1518952633.87	0.135	IY0 in THREE
+20	1518952634.01	0.143	IH1 in HIT
+21	1518952634.2	0.188	AA1 in FATHER
+22	1518952634.38	0.188	ER0 in FATHER
+23	1518952634.51	0.122	EY1 in HATE
+24	1518952634.73	0.221	AE1 in DANCE
+25	1518952634.87	0.137	OW1 in HOST
+26	1518952635.05	0.187	AA1 in HEART
+27	1518952635.24	0.192	EH0 in HAIR
+28	1518952635.56	0.316	AE1 in AFTER
+29	1518952635.71	0.149	ER0 in AFTER
+end	1518952635.83	0.122	

@@ -1,0 +1,42 @@
+Wed Feb  7 11:18:21 2018
+
+Alignment statistics for file audio.wav:
+
+Not using Git version control. Version info unavailable.
+Consider installing Git (http://git-scm.com/).         and cloning this repository from GitHub with: 
+          git clone git@github.com:JoFrhwld/FAVE.git
+
+Total number of words:			24
+Uncertain transcriptions:		0	(0.0%)
+Unclear passages:			0	(0.0%)
+
+Number of breath groups aligned:	24
+Duration of sound file:			43.100 seconds
+Total time for alignment:		11.48 seconds
+Total time since beginning of program:	12.37 seconds
+
+->	average alignment duration:	0.478 seconds per breath group
+->	alignment rate:			0.287 times real time
+
+
+Alignment statistics:
+
+Chunk	CPU time	real time	d(CPU)	d(time)
+start	0.051	Wed Feb  7 11:18:08 2018	
+prelim	0.941	Wed Feb  7 11:18:09 2018	0.89	0.89
+1	0.945	Wed Feb  7 11:18:10 2018	0.004	0.548
+2	0.95	Wed Feb  7 11:18:10 2018	0.005	0.466
+3	0.957	Wed Feb  7 11:18:11 2018	0.007	0.494
+4	0.963	Wed Feb  7 11:18:11 2018	0.007	0.552
+5	0.97	Wed Feb  7 11:18:12 2018	0.007	0.44
+6	0.977	Wed Feb  7 11:18:12 2018	0.007	0.535
+8	0.991	Wed Feb  7 11:18:13 2018	0.014	0.921
+9	0.998	Wed Feb  7 11:18:14 2018	0.007	0.43
+11	1.011	Wed Feb  7 11:18:15 2018	0.013	0.914
+13	1.025	Wed Feb  7 11:18:15 2018	0.014	0.885
+15	1.037	Wed Feb  7 11:18:16 2018	0.012	0.902
+16	1.044	Wed Feb  7 11:18:17 2018	0.007	0.44
+17	1.051	Wed Feb  7 11:18:17 2018	0.007	0.539
+19	1.063	Wed Feb  7 11:18:18 2018	0.012	0.91
+22	1.081	Wed Feb  7 11:18:20 2018	0.018	1.528
+24	1.094	Wed Feb  7 11:18:21 2018	0.013	0.975
