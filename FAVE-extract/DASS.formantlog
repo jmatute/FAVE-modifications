@@ -1,0 +1,90 @@
+Mon Mar 12 15:59:48 2018
+Not using Git version control. Version info unavailable.
+Consider installing Git (http://git-scm.com/).         and cloning this repository from GitHub with: 
+          git clone git@github.com:JoFrhwld/FAVE.git
+Uncommitted changes when run:
+ FAVE-extract/ARI_Dass_I_word_list.TextGrid | 964 -----------------------------
+ FAVE-extract/ARI_Dass_I_word_list.wav      | Bin 3801430 -> 0 bytes
+ FAVE-extract/Run.sh                        |  20 +-
+ FAVE-extract/bin/extractFormants.py        |  57 +-
+ FAVE-extract/tmpInput                      |   9 -
+ 5 files changed, 58 insertions(+), 992 deletions(-)
+
+
+extractFormants statistics for file ARI_Dass_I_word_list.wav:
+
+Total number of vowels (initially):	29
+->	Number of vowels analyzed:	29	(100.0%)
+->	Number of vowels discarded:	0	(0.0%)
+
+Duration of sound file:		43.100 seconds
+Time for program run:		6.445 seconds
+->	0.222 seconds per analyzed vowel
+->	0.150 times real time
+
+Excluded:
+- Uncertain transcriptions:		0	(0.0%)
+- Overlaps:				0	(0.0%)
+- Truncated words:			0	(0.0%)
+- Below minimum duration:		0	(0.0%)
+
+
+extractFormant settings:
+- removeStopWords:		False
+- measureUnstressed:		True
+- minVowelDuration:		0.050
+- formantPredictionMethod:	mahalanobis
+- measurementPointMethod:	faav
+- nFormants:			5
+- maxFormant:			5000
+- nSmoothing:			12
+- windowSize:			0.025
+- preEmphasis:			50
+- speechSoftware:		Praat
+- outputFormat:			txt
+- outputHeader:			True
+- case:				upper
+- multipleFiles:		False
+- meansFile:			means.txt
+- covsFile:			covs.txt
+- remeasurement:		False
+- vowelSystem:		NorthAmerican
+- pickle		False
+
+
+Time statistics:
+
+count	time	d(time)	token
+start	1520866782.13	
+prelim1	1520866782.13	0.004	
+prelim2	1520866782.13	0.004	
+1	1520866782.13	0.0	AE1 in THAT
+2	1520866782.39	0.26	AA0 in COMMA
+3	1520866782.53	0.134	AH0 in COMMA
+4	1520866782.7	0.17	AA0 in HOT
+5	1520866782.89	0.195	UW1 in TOOTH
+6	1520866783.06	0.169	EH1 in BETTER
+7	1520866783.2	0.138	ER0 in BETTER
+8	1520866783.5	0.296	ER1 in HURT
+9	1520866783.77	0.27	AW1 in HOUSE
+10	1520866783.97	0.208	IH0 in HEAR
+11	1520866784.29	0.316	AO1 in THOUGHT
+12	1520866784.53	0.237	AW1 in TOWN
+13	1520866784.79	0.262	AE1 in HAT
+14	1520866785.03	0.237	UH1 in PUT
+15	1520866785.24	0.217	IY1 in HEAT
+16	1520866785.46	0.215	EH0 in QUESTION
+17	1520866785.65	0.186	AH0 in QUESTION
+18	1520866785.84	0.19	AH1 in HUT
+19	1520866786.03	0.19	IY0 in THREE
+20	1520866786.24	0.211	IH1 in HIT
+21	1520866786.41	0.172	AA1 in FATHER
+22	1520866786.7	0.29	ER0 in FATHER
+23	1520866786.86	0.162	EY1 in HATE
+24	1520866787.09	0.228	AE1 in DANCE
+25	1520866787.26	0.168	OW1 in HOST
+26	1520866787.45	0.188	AA1 in HEART
+27	1520866787.69	0.243	EH0 in HAIR
+28	1520866788.06	0.372	AE1 in AFTER
+29	1520866788.35	0.293	ER0 in AFTER
+end	1520866788.57	0.219	

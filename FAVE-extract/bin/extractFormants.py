@@ -57,7 +57,7 @@
 
 """
 Takes as input a sound file and a Praat .TextGrid file (with word and phone tiers)
-and outputs automatically extracted F1 and F2 measurements for each vowel
+nd outputs automatically extracted F1 and F2 measurements for each vowel
 (either as a tab-delimited text file or as a Plotnik file).
 """
 
@@ -1786,7 +1786,7 @@ def readSpeakerFile(speakerFile):
 
 def setup_parser():
     parser = argparse.ArgumentParser(description="Takes as input a sound file and a Praat .TextGrid file (with word and phone tiers) and outputs automatically extracted F1 and F2 measurements for each vowel (either as a tab-delimited text file or as a Plotnik file).",
-                                     usage='python %(prog)s [options] filename.wav filename.TextGrid outputFile [--stopWords ...]',
+                                     usage='python %(prog)s [options] speakers.csv [--stopWords ...]',
                                      fromfile_prefix_chars="+")
     parser.add_argument("--candidates", action="store_true", 
                         help="Return all candidate measurements in output")
@@ -1840,12 +1840,12 @@ def setup_parser():
                         help = "verbose output. useful for debugging")
     parser.add_argument("--windowSize", type=float, default=0.025,
                         help="In sec, the size of the Gaussian window to be used for LPC analysis.")
-    parser.add_argument("wavInput",
-                        help = "*.wav audio file")
-    parser.add_argument("tgInput",
-                        help = "*.TextGrid alignment")
-    parser.add_argument("output",
-                        help="File stem for output")
+    parser.add_argument("SpeakersCSV",
+                        help = ".csv with descriptions")
+    #parser.add_argument("tgInput",
+    #                    help = "*.TextGrid alignment")
+    #parser.add_argument("output",
+    #                    help="File stem for output")
     
     return(parser)                            
 
@@ -2050,7 +2050,7 @@ def writeLog(filename, wavFile, maxTime, meansFile, covsFile, opts):
 # This used to be the main program; now it's wrapped in a function...     ##
 #
 
-def extractFormants(wavInput, tgInput, output, opts, SPATH='', PPATH=''):
+def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, SPATH='', PPATH=''):
     """run extractFormants on a sound file and TextGrid file, with the options specified in opts"""
     # S(OX)PATH and P(RAAT)PATH do not need to be specified when run as a standalone program (they can be verified via the shell),
     # but in some cases (running EF as a module from a CGI script as user
@@ -2162,6 +2162,7 @@ def extractFormants(wavInput, tgInput, output, opts, SPATH='', PPATH=''):
         w = changeCase(w, case)
         newStopWords.append(w)
     opts.stopWords = newStopWords
+    print "Supposed stop words", opts.stopWords
 
     # for "multipleFiles" option:  read lists of files into (internal) lists
     if multipleFiles:
@@ -2185,7 +2186,9 @@ def extractFormants(wavInput, tgInput, output, opts, SPATH='', PPATH=''):
         # alignments
         tg = praat.TextGrid()
         tg.read(tgFile)
-        if opts.speaker:
+        if currentSpeaker:
+            speaker = currentSpeaker
+        elif opts.speaker:
             speaker = readSpeakerFile(opts.speaker)
             print "Read speaker background information from .speaker file."
         else:
@@ -2407,12 +2410,34 @@ def extractFormants(wavInput, tgInput, output, opts, SPATH='', PPATH=''):
 # MAIN PROGRAM STARTS HERE                         ##
 #
 if __name__ == '__main__':
-
     parser = setup_parser()
+    opts = parser.parse_args()    
+    speakersFile = opts.SpeakersCSV
+   
+    speakersInfo = open(speakersFile,"r")
+    lines = speakersInfo.readlines()
+    lines = lines[1:]   
+    print "Analysing a total of ",len(lines), "Speakers "
+    for line in lines:
+       arguments = line.split(",")
+       print arguments 
+       prefix, output = arguments[1], arguments[2]
+       wavInput, grid = prefix + arguments[4],prefix+ arguments[5]
+       output1 = output +  "/output_list"
+       output2 = output +  "/output_passage"
+       os.mkdir(output)
+       currentSpeaker = Speaker()
+       currentSpeaker.sex = arguments[9] 
+       currentSpeaker.age = arguments[10]
+       currentSpeaker.tiernum = 0
+       print "Processing Word List"
+       extractFormants(wavInput, grid, output1, opts, currentSpeaker) 
+       wavInput, grid = prefix + arguments[7],prefix+ arguments[8]
+       print "Reading Passage "
+       extractFormants(wavInput, grid, output2, opts, currentSpeaker) 
+ 
+    #wavInput = opts.wavInput
+    #tgInput = opts.tgInput
+    #output = opts.output
 
-    opts = parser.parse_args()        
-    wavInput = opts.wavInput
-    tgInput = opts.tgInput
-    output = opts.output
-
-    extractFormants(wavInput, tgInput, output, opts)
+    #extractFormants(wavInput, tgInput, output, opts)
