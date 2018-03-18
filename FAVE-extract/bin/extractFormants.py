@@ -1372,11 +1372,12 @@ def outputFormantSettings(measurements, speaker, outputFile):
     f.close()
 
 
-def outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile, outputHeader, tracks):
+def outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile, outputHeader, tracks, allOutputFiles):
     """writes measurements to file according to selected output format"""
 
     ## outputFormat = "text"
     if outputFormat in ['txt', 'text', 'both']:
+        allOutputFiles.append(os.path.splitext(outputFile)[0] + ".txt")
         fw = open(os.path.splitext(outputFile)[0] + ".txt", 'w')
                   # explicitly generate different extensions for "both" option
         # print header, if applicable
@@ -2050,7 +2051,7 @@ def writeLog(filename, wavFile, maxTime, meansFile, covsFile, opts):
 # This used to be the main program; now it's wrapped in a function...     ##
 #
 
-def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, SPATH='', PPATH=''):
+def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFiles, SPATH='', PPATH=''):
     """run extractFormants on a sound file and TextGrid file, with the options specified in opts"""
     # S(OX)PATH and P(RAAT)PATH do not need to be specified when run as a standalone program (they can be verified via the shell),
     # but in some cases (running EF as a module from a CGI script as user
@@ -2165,12 +2166,17 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, SPATH='', P
     print "Supposed stop words", opts.stopWords
 
     # for "multipleFiles" option:  read lists of files into (internal) lists
-    if multipleFiles:
-        wavFiles, tgFiles, outputFiles = processInput(wavInput, tgInput, output)
-    else:
-        wavFiles = [wavInput]
-        tgFiles = [tgInput]
-        outputFiles = [output]
+    #if multipleFiles:
+    #    wavFiles, tgFiles, outputFiles = processInput(wavInput, tgInput, output)
+    #else:
+    #    wavFiles = [wavInput]
+    #    tgFiles = [tgInput]
+    #    outputFiles = [output]
+
+    wavFiles = wavInput
+    tgFiles = tgInput
+    outputFiles = [output]*len(wavInput)
+    measurements = []
 
     # process each tuple of input/output files
     for (wavFile, tgFile, outputFile) in zip(wavFiles, tgFiles, outputFiles):
@@ -2216,7 +2222,6 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, SPATH='', P
         print 'Identified vowels in the TextGrid.'
         global maxTime
         maxTime = tg.xmax()  # duration of TextGrid/sound file
-        measurements = []
 
         markTime("prelim2")
         
@@ -2388,21 +2393,21 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, SPATH='', P
         # (this prevents the creation of empty output files)
         # if len(measurements) > 0:
         # calculate measurement means
-        m_means = calculateMeans(measurements)
-        # normalize measurements
-        measurements, m_means = normalize(measurements, m_means)
-        print ''
-        outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile, outputHeader, opts.tracks)
+    m_means = calculateMeans(measurements)
+    # normalize measurements
+    measurements, m_means = normalize(measurements, m_means)
+    print ''
+    outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile, outputHeader, opts.tracks, allOutputFiles)
 
-        if opts.pickle:
-            pi = open(os.path.splitext(outputFile)[0] + ".pickle", 'wb')
-            pickle.dump(measurements, pi, pickle.HIGHEST_PROTOCOL)
-            pi.close()
+    if opts.pickle:
+      pi = open(os.path.splitext(outputFile)[0] + ".pickle", 'wb')
+      pickle.dump(measurements, pi, pickle.HIGHEST_PROTOCOL)
+      pi.close()
 
-        markTime("end")
+    markTime("end")
 
-        # write log file
-        writeLog(os.path.splitext(outputFile)
+    # write log file
+    writeLog(os.path.splitext(outputFile)
                  [0] + ".formantlog", wavFile, maxTime, meansFile, covsFile, opts)
 
 
@@ -2418,26 +2423,30 @@ if __name__ == '__main__':
     lines = speakersInfo.readlines()
     lines = lines[1:]   
     print "Analysing a total of ",len(lines), "Speakers "
+    allOutputFiles = []
     for line in lines:
        arguments = line.split(",")
        print arguments 
        prefix, output = arguments[1], arguments[2]
-       wavInput, grid = prefix + arguments[4],prefix+ arguments[5]
-       output1 = output +  "/output_list"
-       output2 = output +  "/output_passage"
+       wavInput1, grid1 = prefix + arguments[4],prefix+ arguments[5]
+       wavInput2, grid2 = prefix + arguments[7],prefix+ arguments[8]
        os.mkdir(output)
        currentSpeaker = Speaker()
        currentSpeaker.sex = arguments[9] 
-       currentSpeaker.age = arguments[10]
+       currentSpeaker.age = arguments[10].replace("\n","")
+       currentSpeaker.name = prefix
        currentSpeaker.tiernum = 0
-       print "Processing Word List"
-       extractFormants(wavInput, grid, output1, opts, currentSpeaker) 
-       wavInput, grid = prefix + arguments[7],prefix+ arguments[8]
-       print "Reading Passage "
-       extractFormants(wavInput, grid, output2, opts, currentSpeaker) 
+       output1 = output +  "/completeoutput"
+       extractFormants([wavInput1,wavInput2], [grid1,grid2], output1, opts, currentSpeaker, allOutputFiles ) 
+    # Now that we have all the files, join them and print them at the current location
+    # Lets get all the lines of all the files 
+    allOutputlines = []
+    for i in range( len(allOutputFiles)): 
+       lines = open(allOutputFiles[i],"r").readlines()
+       if i != 0:
+          lines= lines[1:] # remove the header
+       allOutputlines.extend(lines)
+    with open("CompleteResult.txt","w") as f:
+      for line in allOutputlines:
+         f.write(line)
  
-    #wavInput = opts.wavInput
-    #tgInput = opts.tgInput
-    #output = opts.output
-
-    #extractFormants(wavInput, tgInput, output, opts)
