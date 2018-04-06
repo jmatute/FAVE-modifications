@@ -75,6 +75,7 @@ import plotnik
 import cmu
 import vowel
 import subprocess
+import shutil
 
 import pickle
 import csv
@@ -564,7 +565,7 @@ def extractPortion(wavFile, vowelWavFile, beg, end, soundEditor, debug):
         command = os.path.join(SOXPATH, 'sox') + ' ' + wavFile + ' -t wavpcm ' +\
                   os.path.join(SCRIPTS_HOME, vowelWavFile) + ' trim ' + str(beg) + ' ' + str(end - beg)
         
-        print command
+        #print command
         success = os.system(command)
         if success != 0:
            print "Sox returns not successful extraction "
@@ -891,10 +892,15 @@ def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMe
             nFormants = 3
             while nFormants <= 6:
                 command =os.path.join(PRAATPATH, PRAATNAME) + ' ' + os.path.join(SCRIPTS_HOME, 'extractFormants.praat') + ' ' + vowelWavFile + ' ' + str(nFormants) + ' ' + str(maxFormant) + ' ' ' ' + str(windowSize) + ' ' + str(preEmphasis) + ' burg'
-                print "Command Used for PRAAT with ", nFormants, command
+                
+                fname = vowelWavFile[-7:]
+                if fname == "AE1.wav":
+                    print "Command Used for PRAAT with ", nFormants, ">>",command
                 os.system(command)
                 lpc = praat.Formant()
                 lpc.read(os.path.join(SCRIPTS_HOME, vowelFileStem + '.Formant'))
+                #if fname == "AE1.wav":
+                #    lpc.info()
                 LPCs.append(lpc)
                 nFormants += 1
         else:
@@ -925,15 +931,17 @@ def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMe
                                   # file
             poles.append(lpc.formants())
             bandwidths.append(lpc.bandwidths())
+        fname = vowelWavFile[-7:]
+        debug = (fname == "AE1.wav")
         vm = measureVowel(p, w, poles, bandwidths, convertedTimes, intensity, measurementPointMethod,
-            formantPredictionMethod, padBeg, padEnd, means, covs)
+            formantPredictionMethod, padBeg, padEnd, means, covs,debug)
     # default:
     else:   # assume 'default' here
         convertedTimes = [convertTimes(fmt.times(), p.xmin - padBeg)]
         formants = [fmt.formants()]
         bandwidths = [fmt.bandwidths()]
         vm = measureVowel(p, w, formants, bandwidths, convertedTimes, intensity, measurementPointMethod,
-            formantPredictionMethod, padBeg, padEnd, '', '')
+            formantPredictionMethod, padBeg, padEnd, '', '', False)
 
     os.remove(os.path.join(SCRIPTS_HOME, vowelWavFile))
     return vm
@@ -1089,7 +1097,7 @@ def mean_stdv(valuelist):
     return mean, stdv
 
 
-def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPointMethod, formantPredictionMethod, padBeg, padEnd, means, covs):
+def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPointMethod, formantPredictionMethod, padBeg, padEnd, means, covs, debug):
     """returns vowel measurement (formants, bandwidths, labels, Plotnik codes)"""
 
     # smooth formant tracks and bandwidths, if desired
@@ -1101,7 +1109,11 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
             print "\tERROR! Vowel %s in word %s is too short to be measured with selected value for smoothing parameter." % (phone.label, word.transcription)
             return None
         else:
+            if debug: 
+               print "Before smoothing", poles[0][:2]
             poles = [smoothTracks(p, nSmoothing) for p in poles]
+            if debug:
+               print "After smoothing", poles[0][:2]
             bandwidths = [smoothTracks(b, nSmoothing) for b in bandwidths]
             times = [t[nSmoothing:-nSmoothing] for t in times]
 
@@ -1134,6 +1146,9 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
         winner_poles = poles[winnerIndex]
         winner_bandwidths = bandwidths[winnerIndex]
         tracks = all_tracks[winnerIndex]
+        if debug:  
+           print "Winner Index ", winnerIndex + 3, " Measurement Point", measurementPoint
+           print  f1, f2, f3 
 
     else:  # formantPredictionMethod == 'default'
         measurementPoint = getMeasurementPoint(phone, poles[0], times[0], intensity, measurementPointMethod)
@@ -1183,6 +1198,9 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
         vm.b2 = round(b2, 1)
     if b3 != '':
         vm.b3 = round(b3, 1)
+    
+    if vm.phone == "AE":
+        print f1, f2, f3
     vm.t = round(measurementPoint, 3)  # measurement time (rounded to msec)
     vm.code = phone.code  # Plotnik vowel code (whole code?)
     vm.cd = phone.cd  # Plotnik code for vowel class
@@ -2371,6 +2389,9 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
                 # windowSize:  from config file or default settings
                 # maxTime = duration of sound file/TextGrid
                 extractPortion(wavFile, vowelWavFile, p.xmin - padBeg, p.xmax + padEnd, soundEditor, True)
+
+                if vowelFileStem[-3:] == "AE1":
+                    print "\n",w.transcription
                 vm = getVowelMeasurement(vowelFileStem, p, w, opts.speechSoftware,
                                          formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker)
 
@@ -2388,15 +2409,36 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
                     count_analyzed += 1
 
         if remeasurement and formantPredictionMethod == 'mahalanobis':
+            print "\nApplying Remeasurement " 
+	    for measurement in measurements:
+		if measurement.phone == "AE":
+		    print measurement.phone, measurement.f1, measurement.f2
             measurements = remeasure(measurements)
+	    
+            print "*"*20
+            for measurement in measurements:
+		if measurement.phone == "AE":
+		    print measurement.phone, measurement.f1, measurement.f2
+
+
 
         # don't output anything if we didn't take any measurements
         # (this prevents the creation of empty output files)
         # if len(measurements) > 0:
         # calculate measurement means
     m_means = calculateMeans(measurements)
+    print "Applying Normalization "  
     # normalize measurements
+    for measurement in measurements:
+        if measurement.phone == "AE":
+            print measurement.phone, measurement.f1, measurement.f2
+
     measurements, m_means = normalize(measurements, m_means)
+    print "*"*20
+    for measurement in measurements:
+        if measurement.phone == "AE":
+            print measurement.phone, measurement.f1, measurement.f2
+
     print ''
     outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile, outputHeader, opts.tracks, allOutputFiles)
 
@@ -2431,6 +2473,8 @@ if __name__ == '__main__':
        prefix, output = arguments[1], arguments[2]
        wavInput1, grid1 = prefix + arguments[4],prefix+ arguments[5]
        wavInput2, grid2 = prefix + arguments[7],prefix+ arguments[8]
+       if os.path.exists(output):
+           shutil.rmtree(output)
        os.mkdir(output)
        currentSpeaker = Speaker()
        currentSpeaker.sex = arguments[9] 

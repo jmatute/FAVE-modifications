@@ -90,7 +90,7 @@ STOPWORDLIST="./stoplist_capitals_ut.txt"
 OPTIONS="${OPTIONS} --stopWordsFile ${STOPWORDLIST}"
 
 #########################################################################
-OPTIONS="${OPTIONS} --verbose"
+# OPTIONS="${OPTIONS} --verbose"
 
 #########################################################################
 WINDOWSIZE=0.025

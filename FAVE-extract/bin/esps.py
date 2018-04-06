@@ -44,6 +44,12 @@ class Formant:
 
     def poles(self):
         return self.__poles
+    
+    def info(self):
+        print "Times: ", self.__times
+        print "Poles: ", self.__poles
+        print "Bandwiths:", self.__bandwidths
+        print "Formants:", self.__formants
 
     def pole_bandwidths(self):
         return self.__pole_bandwidths
@@ -135,6 +141,11 @@ class LPC:
     def x1(self):
         return self.__x1
 
+    def info(self):
+        print "Times: ", self.__times
+        print "Poles: ", self.__poles
+        print "Bandwiths:", self.__bandwidths
+ 
     def read(self, filename):
         """ get sampling and pole / bandwidth info from .pole file"""
         text = open(filename, 'rU')

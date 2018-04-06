@@ -35,6 +35,12 @@ class Formant:
         self.__x1 = None  # start time of first frame (in seconds)
         self.__maxFormants = None  # maximum number of formants in a frame
 
+
+    def info(self):
+        print "Times", self.__times
+        print "Formants", self.__formants
+        print "Max Formants",self.__maxFormants        
+
     def n(self):
         """returns the number of frames"""
         return self.__nx
