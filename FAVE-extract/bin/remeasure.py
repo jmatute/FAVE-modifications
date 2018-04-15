@@ -199,10 +199,15 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
     """
     Predicts F1 and F2 from the speaker's own vowel distributions based on the mahalanobis distance.
     """
-    # print "\nREMEASURING..."
+    print "\nREMEASURING..."
     remeasurements = []
+    i = 0
     for vm in measurements:
 
+        if vm.phone=="AE":
+           print "*"*20
+           print "AE: ", i
+           i += 1
         valuesList = []
         distanceList = []
         nFormantsList = []
@@ -237,6 +242,7 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
                 # If there is only one member of a vowel category,
                 # the covariance matrix will be filled with NAs
                 # sys.stderr.write(vowel+"\n")
+                 
                 if vowel in vowelCovs:
                     # if no re-measurement is to take place for one of the three reasons below, the list of candidate measurements and nFormants
                     # will be filled with four identical copies of the original measurement, all with a distance of zero
@@ -254,14 +260,18 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
                         nFormantsList.append(vm.nFormants)
                     # "real" re-measurement
                     else:
-                        dist = mahalanobis(
-                            x, vowelMeans[vowel], vowelCovs[vowel])
+                        dist = mahalanobis( x, vowelMeans[vowel], vowelCovs[vowel])
+
                         valuesList.append(outvalues)
+                        if vm.phone == "AE": 
+                           print "Re-measure AE", outvalues[:3], dist, i+3
                         distanceList.append(dist)
                         nFormantsList.append(
                             i + 3)  # these are the formant setting used, not the actual number of formants returned
                         keepOldTracks = False
                 else:
+                    if vm.phone == "AE": 
+                        print vowel, "AE Not found in the vowelCows for remeasure" 
                     valuesList.append(
                         [float(vm.f1), float(vm.f2), vm.f3, math.log(float(vm.b1)), math.log(float(vm.b2)), vm.b3, lDur])
                     distanceList.append(0)

@@ -50,7 +50,7 @@ NFORMANTS=5
 OPTIONS="${OPTIONS} --nFormants ${NFORMANTS}"
 
 #########################################################################
-NSMOOTHING=12
+NSMOOTHING=0
 OPTIONS="${OPTIONS} --nSmoothing ${NSMOOTHING}"
 
 #########################################################################

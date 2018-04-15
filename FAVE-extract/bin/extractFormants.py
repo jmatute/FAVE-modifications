@@ -178,6 +178,7 @@ class VowelMeasurement:
         self.all_poles = []
         self.all_bandwidths = []
         self.nFormants = None  # actual formant settings used in the measurement (for Mahalanobis distance method)
+        self.oFormants = None
         self.glide = ''  # Plotnik glide coding
         self.norm_f1 = None  # normalized F1
         self.norm_f2 = None  # normalized F2
@@ -1147,7 +1148,7 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
         winner_bandwidths = bandwidths[winnerIndex]
         tracks = all_tracks[winnerIndex]
         if debug:  
-           print "Winner Index ", winnerIndex + 3, " Measurement Point", measurementPoint
+           print "Winner Index ", winnerIndex, " winner maxFormant" , winnerIndex +  3, " Measurement Point", measurementPoint
            print  f1, f2, f3 
 
     else:  # formantPredictionMethod == 'default'
@@ -1220,6 +1221,7 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
     if formantPredictionMethod == 'mahalanobis':
         vm.nFormants = winnerIndex + \
             3  # actual formant settings used in the analysis
+        vm.oFormants = winnerIndex + 3
         if phone.label[:-1] == "AY":
             vm.glide = detectMonophthong(poles[winnerIndex], measurementPoints[
                                          winnerIndex][0], measurementPoints[winnerIndex][1])
@@ -1420,8 +1422,10 @@ def outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile,
                                 'F1@65%','F2@65%', 'F1@80%', 'F2@80%']))
             if formantPredictionMethod == 'mahalanobis':
                 fw.write('\t')
-                fw.write('nFormants')
+                fw.write('nFormants\t')
+                fw.write('oFormants')
             if candidates:
+                fw.write('\t')
                 fw.write('\t')
                 fw.write('\t'.join(['poles', 'bandwidths']))
             fw.write('\n')
@@ -1473,7 +1477,8 @@ def outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile,
 
             if vm.nFormants:
                 fw.write('\t')
-                fw.write(str(vm.nFormants))
+                fw.write(str(vm.nFormants)+"\t")
+                fw.write(str(vm.oFormants))
                          # nFormants selected (if Mahalanobis method)
             if candidates:
                 fw.write('\t')
@@ -1498,7 +1503,8 @@ def outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile,
                            'norm_F1@65%', 'norm_F2@65%', 'norm_F1@80%', 'norm_F2@80%']))
             if formantPredictionMethod == 'mahalanobis':
                 fw.write('\t')
-                fw.write('nFormants')
+                fw.write('nFormants\t')
+                fw.write('oFormants')
             fw.write('\n')
         # individual measurements
         for vm in measurements:
@@ -1516,6 +1522,9 @@ def outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile,
                 fw.write(str(vm.nFormants))
                          # nFormants selected (if Mahalanobis method)
                 fw.write('\t')
+                fw.write(str(vm.oFormants))
+                fw.write('\t')
+
             fw.write('\n')
         fw.close()
         print "Normalized vowel measurements output in .txt format to the file %s" % (os.path.splitext(outputFile)[0] + "_norm.txt")
@@ -2409,17 +2418,20 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
                     count_analyzed += 1
 
         if remeasurement and formantPredictionMethod == 'mahalanobis':
-            print "\nApplying Remeasurement " 
-	    for measurement in measurements:
-		if measurement.phone == "AE":
-		    print measurement.phone, measurement.f1, measurement.f2
-            measurements = remeasure(measurements)
-	    
-            print "*"*20
+            print "\nApplying Remeasurement to " ,len(measurements) , " measures"  
+	    print "Before > " 
             for measurement in measurements:
 		if measurement.phone == "AE":
-		    print measurement.phone, measurement.f1, measurement.f2
+		    print measurement.phone, measurement.f1, measurement.f2 , measurement.f3, measurement.nFormants, measurement.oFormants
+            measurements = remeasure(measurements)
+	    
+            print  "After >"
+            for measurement in measurements:
+		if measurement.phone == "AE":
+		    print measurement.phone, measurement.f1, measurement.f2 , measurement.f3, measurement.nFormants, measurement.oFormants
 
+
+            print "*"*20
 
 
         # don't output anything if we didn't take any measurements
