@@ -1371,7 +1371,7 @@ def outputFormantSettings(measurements, speaker, outputFile):
     # indices
     count = {}
     for code in plotnik.PLOTNIKCODES:
-        for nf in range(3, 7):
+        for nf in range(3, 8):
             count[(str(code), nf)] = 0
     for vm in measurements:
         count[(str(vm.cd), int(vm.nFormants))] += 1
@@ -1382,7 +1382,7 @@ def outputFormantSettings(measurements, speaker, outputFile):
     f.write("Formant settings for %s:\n\n" % outputFile)
     f.write(', '.join([speaker.name, speaker.age, speaker.sex, speaker.city, speaker.state, speaker.year]))
     f.write('\n\n')
-    f.write('\t'.join(['vowel', '3', '4', '5', '6']))
+    f.write('\t'.join(['vowel', '3', '4', '5', '6','7']))
     f.write('\n')
     f.write('----------------------------------------\n')
     for code in plotnik.PLOTNIKCODES:

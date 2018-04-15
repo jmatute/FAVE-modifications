@@ -271,11 +271,12 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
                         keepOldTracks = False
                 else:
                     if vm.phone == "AE": 
-                        print vowel, "AE Not found in the vowelCows for remeasure" 
+                        print vowel, "AE Not found in the vowelCovs for remeasure" 
                     valuesList.append(
                         [float(vm.f1), float(vm.f2), vm.f3, math.log(float(vm.b1)), math.log(float(vm.b2)), vm.b3, lDur])
                     distanceList.append(0)
-                    nFormantsList.append(i + 3)
+                    nFormantsList.append(7)
+                    #nFormantsList.append(i + 3)
 
         winnerIndex = distanceList.index(min(distanceList))
         dist = repr(min(distanceList))
