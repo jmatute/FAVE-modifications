@@ -84,7 +84,9 @@ import numpy as np
 from itertools import tee, islice, izip
 from bisect import bisect_left
 
-from remeasure import remeasure
+#from remeasure import remeasure
+from remeasure2 import remeasure
+
 from mahalanobis import mahalanobis
 
 os.chdir(os.getcwd())
