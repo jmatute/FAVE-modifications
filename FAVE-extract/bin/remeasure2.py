@@ -187,7 +187,7 @@ def calculateVowelMeans(vowels):
 
         vowelMeans[vowel] = np.array(
             [vF1.mean(), vF2.mean(), vB1.mean(), vB2.mean(), vDur.mean()])
-        if vF1.shape[0] >= 3:
+        if vF1.shape[0] >= 5:
             vowel_cov = np.cov(np.vstack((vF1, vF2, vB1, vB2, vDur)))
             if np.linalg.det(vowel_cov) != 0:
                 vowelCovs[vowel] = np.linalg.inv(vowel_cov)
@@ -221,7 +221,7 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
             if len(vm.poles[i]) >= 2:
                 F1 = vm.poles[i][0]
                 F2 = vm.poles[i][1]
-                if len(vm.poles[i]) >= 3 and vm.poles[i][2]:  # could be "None"
+                if len(vm.poles[i]) >= 5 and vm.poles[i][2]:  # could be "None"
                     F3 = vm.poles[i][2]
                 else:
                     F3 = "NA"
@@ -253,7 +253,7 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
                             [float(vm.f1), float(vm.f2), vm.f3, math.log(float(vm.b1)), math.log(float(vm.b2)), vm.b3, lDur])
                         distanceList.append(0)
                         nFormantsList.append(vm.nFormants)
-                    elif len(vowels[vowel]) < 3:
+                    elif len(vowels[vowel]) < 5:
                         valuesList.append(
                             [float(vm.f1), float(vm.f2), vm.f3, math.log(float(vm.b1)), math.log(float(vm.b2)), vm.b3, lDur])
                         distanceList.append(0)
