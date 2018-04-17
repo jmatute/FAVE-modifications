@@ -2491,9 +2491,9 @@ if __name__ == '__main__':
            shutil.rmtree(output)
        os.mkdir(output)
        currentSpeaker = Speaker()
-       currentSpeaker.sex = arguments[9] 
-       currentSpeaker.age = arguments[10].replace("\n","")
-       currentSpeaker.name = prefix
+       currentSpeaker.sex = arguments[9].replace("\n","").replace("\r","") 
+       currentSpeaker.age = arguments[10].replace("\n","").replace("\r","")
+       currentSpeaker.name = prefix.replace("\n","").replace("\r","")
        currentSpeaker.tiernum = 0
        output1 = output +  "/completeoutput"
        extractFormants([wavInput1,wavInput2], [grid1,grid2], output1, opts, currentSpeaker, allOutputFiles ) 
