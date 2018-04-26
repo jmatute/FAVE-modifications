@@ -1,2 +1,3 @@
 NUM_SPEAKER,PREFIX,OUTPUTFOLDER,LIST,LIST_AUDIO,LIST_GRID,PASSAGE,PASSAGE_AUDIO,PASSAGE_GRID,GENDER,AGE
 1,./INPUTFILES/DASS/,./DASS,ARI_Dass_I_word list.txt,ARI_Dass_I_word_list.wav,ARI_Dass_I_word_list.TextGrid,ARI_Dass_I_reading passage.txt,ARI_Dass_I_reading_passage.wav,ARI_Dass_I_reading_passage.TextGrid,F,55
+2,./INPUTFILES/ARI_Frederick/,./Frederick,wordlist.txt,listAudio.wav,wordlist.TextGrid,passage.txt,passage.wav,passage.TextGrid,M,55

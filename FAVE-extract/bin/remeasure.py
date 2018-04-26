@@ -215,7 +215,7 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
 
         # if no remeasurement takes place, the new winner index will be automatically zero (see the three cases listed below)
         # but we actually want to keep the old values for the formant tracks
-        keepOldTracks = True
+        keepOldTracks = False
 
         for i in range(len(vm.poles)):
             if len(vm.poles[i]) >= 2:

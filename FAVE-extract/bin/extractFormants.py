@@ -84,8 +84,8 @@ import numpy as np
 from itertools import tee, islice, izip
 from bisect import bisect_left
 
-#from remeasure import remeasure
-from remeasure2 import remeasure
+from remeasure import remeasure
+#from remeasure2 import remeasure
 
 from mahalanobis import mahalanobis
 
@@ -567,8 +567,9 @@ def extractPortion(wavFile, vowelWavFile, beg, end, soundEditor, debug):
         # files where Praat could not read the extracted portion
         command = os.path.join(SOXPATH, 'sox') + ' ' + wavFile + ' -t wavpcm ' +\
                   os.path.join(SCRIPTS_HOME, vowelWavFile) + ' trim ' + str(beg) + ' ' + str(end - beg)
-        
-        #print command
+       
+        if debug: 
+            print command
         success = os.system(command)
         if success != 0:
            print "Sox returns not successful extraction "
@@ -577,7 +578,8 @@ def extractPortion(wavFile, vowelWavFile, beg, end, soundEditor, debug):
         command = os.path.join(PRAATPATH, PRAATNAME) + ' ' + SCRIPTS_HOME + '/extractSegment.praat ' +\
                   os.path.join(os.path.pardir, wavFile) + ' ' + vowelWavFile + ' ' + str(beg) + ' ' + str(end)
         
-        print command
+        if debug:
+            print command
         success = os.system(command)
         if success != 0:
            print "Praat returns not successful extraction "
@@ -642,6 +644,7 @@ def getFormantTracks(poles, times, xmin, xmax):
             F1 = poles[index][0]
             F2 = poles[index][1]
             tracks.append(F1)
+            print "Getting formant tracks at i ", index , F1, F2
             tracks.append(F2)
         except IndexError:
             # if we only have F1 but no matching F2, that measurement is probably not reliable enough
@@ -907,6 +910,7 @@ def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMe
                 LPCs.append(lpc)
                 nFormants += 1
         else:
+            nFormants=5
             os.system(os.path.join(PRAATPATH, PRAATNAME) + ' ' + os.path.join(SCRIPTS_HOME, 'extractFormants.praat') + ' ' +
                       vowelWavFile + ' ' + str(nFormants) + ' ' + str(maxFormant) + ' ' + str(windowSize) + ' ' + str(preEmphasis) + ' burg')
             fmt = praat.Formant()
@@ -1148,9 +1152,11 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
         # get five sample points of selected formant tracks
         winner_poles = poles[winnerIndex]
         winner_bandwidths = bandwidths[winnerIndex]
+        print "All Tracks " , all_tracks
         tracks = all_tracks[winnerIndex]
         if debug:  
            print "Winner Index ", winnerIndex, " winner maxFormant" , winnerIndex +  3, " Measurement Point", measurementPoint
+           print "Winner track ", winnerIndex
            print  f1, f2, f3 
 
     else:  # formantPredictionMethod == 'default'
@@ -1179,7 +1185,12 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
         else:
             b3 = ''
         # get five sample points of formant tracks
-        tracks = getFormantTracks(poles[0], times[0], phone.xmin, phone.xmax)
+        
+        
+        tracks = getFormantTracks(poles[0], times[0], phone.xmin-padBeg, phone.xmax+padEnd)
+        print "TRACKS "
+        print tracks
+        print "*********************************"
         all_tracks = []
         winner_poles = poles[0]
         winner_bandwidths = bandwidths[0]
@@ -1227,6 +1238,9 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
         if phone.label[:-1] == "AY":
             vm.glide = detectMonophthong(poles[winnerIndex], measurementPoints[
                                          winnerIndex][0], measurementPoints[winnerIndex][1])
+    print "\tTRACKS\t "
+    print tracks
+    print "\n\n"
     vm.tracks = tracks  # F1 and F2 measurements at 20%, 35%, 50%, 65% and 80% of the vowel duration
     vm.all_tracks = all_tracks  # list of formant tracks for all possible formant settings (needed for remeasurement)
     vm.winner_bandwidths = winner_bandwidths
@@ -1475,7 +1489,7 @@ def outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile,
                      # time of measurement, beginning and end of phone,
                      # duration, Plotnik environment codes, style coding, glide
                      # coding
-            fw.write('\t'.join([str(round(t, 1)) if t else '' for t in vm.tracks]))  # formant tracks
+            fw.write('\t'.join([str(round(t, 4)) if t else '' for t in vm.tracks]))  # formant tracks
 
             if vm.nFormants:
                 fw.write('\t')

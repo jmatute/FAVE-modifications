@@ -26,6 +26,7 @@ OPTIONS="${OPTIONS} --covariances ${COVARIANCESFILE}"
 
 #########################################################################
 PREDICTIONMETHOD=mahalanobis
+#PREDICTIONMETHOD=default
 OPTIONS="${OPTIONS} --formantPredictionMethod ${PREDICTIONMETHOD}"
 
 #########################################################################
@@ -50,7 +51,7 @@ NFORMANTS=5
 OPTIONS="${OPTIONS} --nFormants ${NFORMANTS}"
 
 #########################################################################
-NSMOOTHING=12
+NSMOOTHING=0
 OPTIONS="${OPTIONS} --nSmoothing ${NSMOOTHING}"
 
 #########################################################################
@@ -90,7 +91,7 @@ STOPWORDLIST="./stoplist_capitals_ut.txt"
 OPTIONS="${OPTIONS} --stopWordsFile ${STOPWORDLIST}"
 
 #########################################################################
-# OPTIONS="${OPTIONS} --verbose"
+OPTIONS="${OPTIONS} --verbose"
 
 #########################################################################
 WINDOWSIZE=0.025
