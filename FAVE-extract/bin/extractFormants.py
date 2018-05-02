@@ -638,13 +638,14 @@ def getFormantTracks(poles, times, xmin, xmax):
     # into the vowel)
     measurement_times = [xmin + (0.2 * dur) + (0.15 * dur * i)
                          for i in range(5)]
+    
     for t in measurement_times:
         index = getTimeIndex(t, times)
         try:
             F1 = poles[index][0]
             F2 = poles[index][1]
             tracks.append(F1)
-            print "Getting formant tracks at i ", index , F1, F2
+            print "Getting formant tracks at time time index  ", index , F1, F2 ,  " measurement times ", t 
             tracks.append(F2)
         except IndexError:
             # if we only have F1 but no matching F2, that measurement is probably not reliable enough
@@ -872,7 +873,7 @@ def getTransitionLength(minimum, maximum):
     return transition
 
 
-def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker):
+def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker, usePadding):
     """makes a vowel measurement"""
 
     vowelWavFile = vowelFileStem + '.wav'
@@ -941,14 +942,14 @@ def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMe
         fname = vowelWavFile[-7:]
         debug = (fname == "AE1.wav")
         vm = measureVowel(p, w, poles, bandwidths, convertedTimes, intensity, measurementPointMethod,
-            formantPredictionMethod, padBeg, padEnd, means, covs,debug)
+            formantPredictionMethod, padBeg, padEnd, means, covs,debug, usePadding)
     # default:
     else:   # assume 'default' here
         convertedTimes = [convertTimes(fmt.times(), p.xmin - padBeg)]
         formants = [fmt.formants()]
         bandwidths = [fmt.bandwidths()]
         vm = measureVowel(p, w, formants, bandwidths, convertedTimes, intensity, measurementPointMethod,
-            formantPredictionMethod, padBeg, padEnd, '', '', False)
+            formantPredictionMethod, padBeg, padEnd, '', '', False, usePadding)
 
     os.remove(os.path.join(SCRIPTS_HOME, vowelWavFile))
     return vm
@@ -1104,7 +1105,7 @@ def mean_stdv(valuelist):
     return mean, stdv
 
 
-def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPointMethod, formantPredictionMethod, padBeg, padEnd, means, covs, debug):
+def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPointMethod, formantPredictionMethod, padBeg, padEnd, means, covs, debug, usePadding):
     """returns vowel measurement (formants, bandwidths, labels, Plotnik codes)"""
 
     # smooth formant tracks and bandwidths, if desired
@@ -1141,7 +1142,10 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
             measurementPoints.append((measurementPoint, i))
             selectedpoles.append(poles[j][i])
             selectedbandwidths.append(bandwidths[j][i])
-            all_tracks.append(getFormantTracks(poles[j], times[j], phone.xmin-padBeg, phone.xmax+padEnd))
+            if usePadding:
+                all_tracks.append(getFormantTracks(poles[j], times[j], phone.xmin-padBeg, phone.xmax+padEnd))
+            else:
+                all_tracks.append(getFormantTracks(poles[j], times[j], phone.xmin, phone.xmax))
 
         f1, f2, f3, b1, b2, b3, winnerIndex = predictF1F2(phone, selectedpoles, selectedbandwidths, means, covs)
         # check that we actually do have a measurement (this may not be the
@@ -1186,8 +1190,10 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
             b3 = ''
         # get five sample points of formant tracks
         
-        
-        tracks = getFormantTracks(poles[0], times[0], phone.xmin-padBeg, phone.xmax+padEnd)
+        if usePadding:
+            tracks = getFormantTracks(poles[0], times[0], phone.xmin-padBeg, phone.xmax+padEnd)
+        else: 
+            tracks = getFormantTracks(poles[0], times[0], phone.xmin, phone.xmax)
         print "TRACKS "
         print tracks
         print "*********************************"
@@ -1883,6 +1889,10 @@ def setup_parser():
                         default="NorthAmerican",help="If set to Phila, a number of vowels will be reclassified to reflect the phonemic distinctions of the Philadelphia vowel system.")
     parser.add_argument("--verbose", "-v", action="store_true",
                         help = "verbose output. useful for debugging")
+    parser.add_argument("--padding", "-pa", action="store_true",
+                        help = "Apply padding when getting the formant tracks")
+    parser.add_argument("--keep", "-k", action="store_true",
+                        help = "keep old formants")
     parser.add_argument("--windowSize", type=float, default=0.025,
                         help="In sec, the size of the Gaussian window to be used for LPC analysis.")
     parser.add_argument("SpeakersCSV",
@@ -2418,7 +2428,7 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
                 if vowelFileStem[-3:] == "AE1":
                     print "\n",w.transcription
                 vm = getVowelMeasurement(vowelFileStem, p, w, opts.speechSoftware,
-                                         formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker)
+                                         formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker, opts.padding )
 
                 if vm:  # if vowel is too short for smoothing, nothing will be returned
                     vm.context = p_context
@@ -2435,11 +2445,11 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
 
         if remeasurement and formantPredictionMethod == 'mahalanobis':
             print "\nApplying Remeasurement to " ,len(measurements) , " measures"  
-	    print "Before > " 
+	    print "Before > " , opts.keep
             for measurement in measurements:
 		if measurement.phone == "AE":
 		    print measurement.phone, measurement.f1, measurement.f2 , measurement.f3, measurement.nFormants, measurement.oFormants
-            measurements = remeasure(measurements)
+            measurements = remeasure(measurements, opts.keep )
 	    
             print  "After >"
             for measurement in measurements:

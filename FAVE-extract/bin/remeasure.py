@@ -195,7 +195,7 @@ def calculateVowelMeans(vowels):
     return vowelMeans, vowelCovs
 
 
-def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
+def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks):
     """
     Predicts F1 and F2 from the speaker's own vowel distributions based on the mahalanobis distance.
     """
@@ -215,7 +215,7 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
 
         # if no remeasurement takes place, the new winner index will be automatically zero (see the three cases listed below)
         # but we actually want to keep the old values for the formant tracks
-        keepOldTracks = False
+        # keepOldTracks = False
 
         for i in range(len(vm.poles)):
             if len(vm.poles[i]) >= 2:
@@ -268,7 +268,7 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels):
                         distanceList.append(dist)
                         nFormantsList.append(
                             i + 3)  # these are the formant setting used, not the actual number of formants returned
-                        keepOldTracks = False
+                        # keepOldTracks = False
                 else:
                     if vm.phone == "AE": 
                         print vowel, "AE Not found in the vowelCovs for remeasure" 
@@ -351,12 +351,13 @@ def output(remeasurements):
     fw.close()
 
 
-def remeasure(measurements):
+def remeasure(measurements, keepOldTracks):
     vowels = createVowelDictionary(measurements)
     vowelMeans, vowelCovs = calculateVowelMeans(vowels)
     invowels = excludeOutliers(vowels, vowelMeans, vowelCovs)
     vowelMeans, vowelCovs = calculateVowelMeans(invowels)
-    remeasurements = repredictF1F2(measurements, vowelMeans, vowelCovs, vowels)
+    print "Calling repredict ",keepOldTracks
+    remeasurements = repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks)
     return remeasurements
 
 # Main Program Starts Here
