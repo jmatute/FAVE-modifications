@@ -645,7 +645,9 @@ def getFormantTracks(poles, times, xmin, xmax):
             F1 = poles[index][0]
             F2 = poles[index][1]
             tracks.append(F1)
-            print "Getting formant tracks at time time index  ", index , F1, F2 ,  " measurement times ", t 
+    
+            print "Getting formant tracks at poles index  ", index , F1, F2 ,  " measurement times ", t 
+            print xmin, xmax
             tracks.append(F2)
         except IndexError:
             # if we only have F1 but no matching F2, that measurement is probably not reliable enough
