@@ -1,4 +1,4 @@
-#import ast
+import ast
 import math
 import numpy as np
 import sys
@@ -201,13 +201,8 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks):
     """
     print "\nREMEASURING..."
     remeasurements = []
-    i = 0
     for vm in measurements:
 
-        if vm.phone=="AE":
-           print "*"*20
-           print "AE: ", i
-           i += 1
         valuesList = []
         distanceList = []
         nFormantsList = []
@@ -261,24 +256,30 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks):
                     # "real" re-measurement
                     else:
                         dist = mahalanobis( x, vowelMeans[vowel], vowelCovs[vowel])
-
                         valuesList.append(outvalues)
-                        if vm.phone == "AE": 
-                           print "Re-measure AE", outvalues[:3], dist, i+3
                         distanceList.append(dist)
                         nFormantsList.append(
                             i + 3)  # these are the formant setting used, not the actual number of formants returned
                         # keepOldTracks = False
                 else:
-                    if vm.phone == "AE": 
-                        print vowel, "AE Not found in the vowelCovs for remeasure" 
                     valuesList.append(
                         [float(vm.f1), float(vm.f2), vm.f3, math.log(float(vm.b1)), math.log(float(vm.b2)), vm.b3, lDur])
                     distanceList.append(0)
                     nFormantsList.append(7)
                     #nFormantsList.append(i + 3)
-
+        
         winnerIndex = distanceList.index(min(distanceList))
+        if nFormantsList[winnerIndex] == 7:
+            # keep the same tracks if the winner index is 7, i.e. calculation could not be redone
+            idx, d = -1, 1000
+            for i in range(4):
+                if  abs(vm.tracks[0] -vm.all_tracks[i][0] ) < d:
+                   idx = i
+                   d = abs(vm.tracks[0] -vm.all_tracks[i][0] ) 
+               
+            if idx != -1:
+               winnerIndex = idx
+            
         dist = repr(min(distanceList))
         bestValues = valuesList[winnerIndex]
         bestnFormants = nFormantsList[winnerIndex]
@@ -356,7 +357,6 @@ def remeasure(measurements, keepOldTracks):
     vowelMeans, vowelCovs = calculateVowelMeans(vowels)
     invowels = excludeOutliers(vowels, vowelMeans, vowelCovs)
     vowelMeans, vowelCovs = calculateVowelMeans(invowels)
-    print "Calling repredict ",keepOldTracks
     remeasurements = repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks)
     return remeasurements
 

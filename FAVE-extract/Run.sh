@@ -97,7 +97,7 @@ OPTIONS="${OPTIONS} --verbose"
 OPTIONS="${OPTIONS} --padding" # Remove to not apply padding when getting formant tracks
 
 #########################################################################
-OPTIONS="${OPTIONS} --keep"    #Keep the old formants 
+#OPTIONS="${OPTIONS} --keep"    #Keep the old formants 
 
 #########################################################################
 WINDOWSIZE=0.025
