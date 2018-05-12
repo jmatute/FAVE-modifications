@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "bin/extractFormants.py", line 2501, in <module>
+    extractFormants([wavInput1,wavInput2], [grid1,grid2], output1, opts, currentSpeaker, allOutputFiles ) 
+  File "bin/extractFormants.py", line 2409, in extractFormants
+    formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker)
+  File "bin/extractFormants.py", line 906, in getVowelMeasurement
+    lpc.read(os.path.join(SCRIPTS_HOME, vowelFileStem + '.Formant'))
+  File "/data/home/matutefl/Desktop/Cooperation_Philipp/FAVE/FAVE-extract/bin/praat.py", line 74, in read
+    text = open(file, 'rU')
+IOError: [Errno 2] No such file or directory: 'bin/ARI_Dass_I_word_list_AO1.Formant'

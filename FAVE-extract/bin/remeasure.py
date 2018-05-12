@@ -170,7 +170,7 @@ def pruneVowels(vowels, vowel, vowelMeans, vowelCovs, outlie):
     return(outtokens)
 
 
-def calculateVowelMeans(vowels):
+def calculateVowelMeans(vowels, minAmountTokens):
     """
     calculates [means] and [covariance matrices] for each vowel class.
     It returns these as numpy arrays in dictionaries indexed by the vowel class.
@@ -187,7 +187,7 @@ def calculateVowelMeans(vowels):
 
         vowelMeans[vowel] = np.array(
             [vF1.mean(), vF2.mean(), vB1.mean(), vB2.mean(), vDur.mean()])
-        if vF1.shape[0] >= 7:
+        if vF1.shape[0] >= minAmountTokens:
             vowel_cov = np.cov(np.vstack((vF1, vF2, vB1, vB2, vDur)))
             if np.linalg.det(vowel_cov) != 0:
                 vowelCovs[vowel] = np.linalg.inv(vowel_cov)
@@ -195,7 +195,7 @@ def calculateVowelMeans(vowels):
     return vowelMeans, vowelCovs
 
 
-def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks):
+def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks, minAmountTokens):
     """
     Predicts F1 and F2 from the speaker's own vowel distributions based on the mahalanobis distance.
     """
@@ -248,7 +248,7 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks):
                             [float(vm.f1), float(vm.f2), vm.f3, math.log(float(vm.b1)), math.log(float(vm.b2)), vm.b3, lDur])
                         distanceList.append(0)
                         nFormantsList.append(vm.nFormants)
-                    elif len(vowels[vowel]) < 7:
+                    elif len(vowels[vowel]) < minAmountTokens:
                         valuesList.append(
                             [float(vm.f1), float(vm.f2), vm.f3, math.log(float(vm.b1)), math.log(float(vm.b2)), vm.b3, lDur])
                         distanceList.append(0)
@@ -352,12 +352,13 @@ def output(remeasurements):
     fw.close()
 
 
-def remeasure(measurements, keepOldTracks):
+def remeasure(measurements, keepOldTracks, minAmountTokens):
+    print "Remeasuring with minimum ", minAmountTokens, " tokens"
     vowels = createVowelDictionary(measurements)
-    vowelMeans, vowelCovs = calculateVowelMeans(vowels)
+    vowelMeans, vowelCovs = calculateVowelMeans(vowels, minAmountTokens)
     invowels = excludeOutliers(vowels, vowelMeans, vowelCovs)
-    vowelMeans, vowelCovs = calculateVowelMeans(invowels)
-    remeasurements = repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks)
+    vowelMeans, vowelCovs = calculateVowelMeans(invowels, minAmountTokens)
+    remeasurements = repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks, minAmountTokens)
     return remeasurements
 
 # Main Program Starts Here

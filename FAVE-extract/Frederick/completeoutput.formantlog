@@ -1,0 +1,175 @@
+Sat May 12 13:48:22 2018
+Not using Git version control. Version info unavailable.
+Consider installing Git (http://git-scm.com/).         and cloning this repository from GitHub with: 
+          git clone git@github.com:JoFrhwld/FAVE.git
+Uncommitted changes when run:
+ FAVE-extract/Run.sh                 |   4 ++++
+ FAVE-extract/bin/extractFormants.py |   4 +++-
+ FAVE-extract/bin/remeasure.py       |  17 +++++++++--------
+ FAVE-extract/bin/remeasure.pyc      | Bin 10381 -> 10409 bytes
+ 4 files changed, 16 insertions(+), 9 deletions(-)
+
+
+extractFormants statistics for file passage.wav:
+
+Total number of vowels (initially):	425
+->	Number of vowels analyzed:	110	(25.9%)
+->	Number of vowels discarded:	315	(74.1%)
+
+Duration of sound file:		102.952 seconds
+Time for program run:		20.414 seconds
+->	0.186 seconds per analyzed vowel
+->	0.198 times real time
+
+Excluded:
+- Uncertain transcriptions:		0	(0.0%)
+- Overlaps:				0	(0.0%)
+- Truncated words:			0	(0.0%)
+- Below minimum duration:		0	(0.0%)
+- Stop words:				204	(48.0%)
+- Unstressed vowels:			110	(25.9%)
+
+
+extractFormant settings:
+- removeStopWords:		True
+- measureUnstressed:		False
+- minVowelDuration:		0.001
+- formantPredictionMethod:	mahalanobis
+- measurementPointMethod:	mid
+- nFormants:			5
+- maxFormant:			5000
+- nSmoothing:			0
+- windowSize:			0.025
+- preEmphasis:			50
+- speechSoftware:		praat
+- outputFormat:			txt
+- outputHeader:			True
+- case:				lower
+- multipleFiles:		False
+- meansFile:			means.txt
+- covsFile:			covs.txt
+- remeasurement:		True
+- vowelSystem:		NorthAmerican
+- pickle		False
+- stopWords:			['question', 'three', 'tourism', 'in', 'the', 'caribbean', 'tourists', 'have', 'been', 'to', 'of', 'for', 'years', 'on', 'nevis', 'springs', 'one', 'its', 'attractions', 'foreign', 'and', 'by', 'was', 'a', 'wealthy', 'with', 'it', 'not', 'until', 'regular', 'up', 'travel', 'industry', 'is', 'thriving', 'million', 'year', 'they', 'just', 'few', 'from', 'as', 'always', 'were', 'warm', 'coral', 'reefs', 'beautiful', 'white', 'colorful', 'colourful', 'weahther', 'music', 'welcoming', 'while', 'their', 'french', 'martinique', 'tourist', 'an', 'what', 'rather', 'than', 'waterfalls', 'dominica', 'draw', 'does', 'belize', 'nearby', 'hot', 'popular', 'common', 'clearly', 'air', 'hop', 'comma', 'hear', 'hair', 'hole']
+
+
+Time statistics:
+
+count	time	d(time)	token
+start	1526125682.3	
+prelim1	1526125682.3	0.002	
+prelim2	1526125682.3	0.003	
+1	1526125682.3	0.0	AE1 in that
+2	1526125682.53	0.234	UW1 in tooth
+3	1526125682.71	0.174	EH1 in better
+4	1526125682.82	0.111	ER1 in hurt
+5	1526125682.96	0.139	AW1 in house
+6	1526125683.24	0.281	AW1 in town
+7	1526125683.52	0.284	AE1 in hat
+8	1526125683.65	0.129	AO1 in thought
+9	1526125683.94	0.295	UH1 in put
+10	1526125684.12	0.179	IY1 in heat
+11	1526125684.26	0.135	IH1 in hit
+12	1526125684.35	0.093	AH1 in hut
+13	1526125684.48	0.132	AA1 in father
+14	1526125684.63	0.15	AA1 in father
+15	1526125684.81	0.175	EY1 in hate
+16	1526125685.03	0.221	AE1 in dance
+17	1526125685.28	0.245	AH1 in cut
+18	1526125685.4	0.127	AA1 in heart
+19	1526125685.59	0.184	OW1 in host
+20	1526125685.77	0.188	AE1 in after
+prelim1	1526125685.97	0.192	
+prelim2	1526125686.01	0.044	
+21	1526125686.01	0.0	AH1 in coming
+22	1526125686.12	0.112	AE1 in sample
+23	1526125686.31	0.186	AY1 in delights
+24	1526125686.52	0.21	OW1 in over
+25	1526125686.69	0.175	UW1 in two
+26	1526125687.12	0.422	AH1 in hundred
+27	1526125687.29	0.169	AE1 in bath
+28	1526125687.46	0.174	OW1 in hotel
+29	1526125687.64	0.179	AY1 in island
+30	1526125687.93	0.289	ER1 in first
+31	1526125688.07	0.142	OW1 in opened
+32	1526125688.24	0.169	EH1 in seven
+33	1526125688.37	0.128	IY1 in teen
+34	1526125688.52	0.156	EH1 in seventy
+35	1526125688.64	0.115	EY1 in eight
+36	1526125688.83	0.193	IY1 in being
+37	1526125689.02	0.193	EY1 in main
+38	1526125689.28	0.255	IH1 in visitors
+39	1526125689.42	0.144	EY1 in late
+40	1526125689.66	0.238	AY1 in nineteenth
+41	1526125689.88	0.219	IY1 in nineteenth
+42	1526125690.01	0.125	EH1 in century
+43	1526125690.16	0.154	EY1 in destination
+44	1526125690.36	0.198	OW1 in those
+45	1526125690.53	0.175	AY1 in time
+46	1526125690.85	0.321	EY1 in make
+47	1526125691.0	0.146	ER1 in journey
+48	1526125691.15	0.15	EH1 in however
+49	1526125691.32	0.168	AE1 in advent
+50	1526125691.52	0.202	AE1 in international
+51	1526125691.69	0.172	AY1 in flights
+52	1526125691.89	0.2	AY1 in nineteen
+53	1526125692.1	0.204	IH1 in sixties
+54	1526125692.21	0.116	AA1 in market
+55	1526125692.44	0.225	AA1 in started
+56	1526125692.61	0.171	OW1 in open
+57	1526125692.72	0.113	AE1 in man
+58	1526125692.87	0.15	EY1 in today
+59	1526125693.09	0.223	IH1 in visit
+60	1526125693.25	0.156	IY1 in each
+61	1526125693.39	0.146	AH1 in come
+62	1526125693.56	0.164	OW1 in both
+63	1526125693.71	0.154	IY1 in sea
+64	1526125693.87	0.159	AH1 in some
+65	1526125693.99	0.118	EY1 in staying
+66	1526125694.24	0.247	AW1 in hours
+67	1526125694.47	0.231	AY1 in island
+68	1526125694.66	0.191	AY1 in island
+69	1526125694.95	0.288	AW1 in found
+70	1526125695.24	0.292	AY1 in islands
+71	1526125695.4	0.164	EY1 in remain
+72	1526125695.6	0.192	IY1 in seas
+73	1526125695.99	0.394	AE1 in dazzling
+74	1526125696.21	0.22	AE1 in sand
+75	1526125696.41	0.206	IY1 in beaches
+76	1526125696.59	0.175	ER1 in birds
+77	1526125696.79	0.203	AH1 in sunny
+78	1526125697.0	0.21	AH1 in stunning
+79	1526125697.18	0.182	AH1 in sunsets
+80	1526125697.32	0.134	AY1 in lively
+81	1526125697.51	0.194	AE1 in dance
+82	1526125697.76	0.249	AO1 in course
+83	1526125697.95	0.186	IY1 in people
+84	1526125698.05	0.098	IH1 in visitors
+85	1526125698.14	0.095	EY1 in favoured
+86	1526125698.28	0.137	AY1 in islands
+87	1526125698.47	0.189	AO1 in according
+88	1526125698.61	0.141	IH1 in english
+89	1526125698.73	0.119	IH1 in visiting
+90	1526125698.83	0.104	EY1 in barbados
+91	1526125698.95	0.125	EY1 in jamaica
+92	1526125699.11	0.156	EH1 in heading
+93	1526125699.22	0.112	EY1 in today's
+94	1526125699.4	0.182	AW1 in without
+95	1526125699.6	0.195	AW1 in doubt
+96	1526125699.82	0.22	AO1 in more
+97	1526125700.04	0.218	AY1 in likely
+98	1526125700.29	0.251	IH1 in pick
+99	1526125700.44	0.156	AY1 in island
+100	1526125700.73	0.287	AO1 in offers
+101	1526125700.93	0.202	EY1 in associations
+102	1526125701.17	0.234	AW1 in thousands
+103	1526125701.38	0.212	IH1 in visit
+104	1526125701.5	0.12	EY1 in barbados
+105	1526125701.62	0.121	IY1 in beaches
+106	1526125701.77	0.148	AW1 in mountains
+107	1526125701.95	0.177	AA1 in large
+108	1526125702.19	0.248	AH1 in number
+109	1526125702.3	0.1	IH1 in visitors
+110	1526125702.39	0.095	UW1 in blue
+end	1526125702.71	0.318	

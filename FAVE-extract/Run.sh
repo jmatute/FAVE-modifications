@@ -100,6 +100,10 @@ OPTIONS="${OPTIONS} --padding" # Remove to not apply padding when getting forman
 #OPTIONS="${OPTIONS} --keep"    #Keep the old formants 
 
 #########################################################################
+NUMTOKENS=7
+OPTIONS="${OPTIONS} --minAmountTokens ${NUMTOKENS}"
+
+#########################################################################
 WINDOWSIZE=0.025
 OPTIONS="${OPTIONS} --windowSize ${WINDOWSIZE}"
 

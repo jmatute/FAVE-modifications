@@ -1897,6 +1897,8 @@ def setup_parser():
                         help = "keep old formants")
     parser.add_argument("--windowSize", type=float, default=0.025,
                         help="In sec, the size of the Gaussian window to be used for LPC analysis.")
+    parser.add_argument("--minAmountTokens", type=int, default=7,
+                        help="Minimal number of tokens per vowel to calculate remeasurement")
     parser.add_argument("SpeakersCSV",
                         help = ".csv with descriptions")
     #parser.add_argument("tgInput",
@@ -2451,7 +2453,7 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
             for measurement in measurements:
 		if measurement.phone == "AE":
 		    print measurement.phone, measurement.f1, measurement.f2 , measurement.f3, measurement.nFormants, measurement.oFormants
-            measurements = remeasure(measurements, opts.keep )
+            measurements = remeasure(measurements, opts.keep , opts.minAmountTokens)
 	    
             print  "After >"
             for measurement in measurements:

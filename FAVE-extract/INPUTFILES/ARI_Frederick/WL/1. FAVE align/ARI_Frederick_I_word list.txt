@@ -1,0 +1,29 @@
+ARI_Frederick_word list	ARI_Frederick_word list	0.16	0.88	That
+ARI_Frederick_word list	ARI_Frederick_word list	1.26	1.79	Tooth
+ARI_Frederick_word list	ARI_Frederick_word list	2.47	3.01	Comma
+ARI_Frederick_word list	ARI_Frederick_word list	3.56	4.24	Better
+ARI_Frederick_word list	ARI_Frederick_word list	4.79	5.42	Hot
+ARI_Frederick_word list	ARI_Frederick_word list	5.9	6.63	Hurt
+ARI_Frederick_word list	ARI_Frederick_word list	7.47	8.39	House
+ARI_Frederick_word list	ARI_Frederick_word list	10.385	10.955	Town
+ARI_Frederick_word list	ARI_Frederick_word list	13.085	13.765	Hear
+ARI_Frederick_word list	ARI_Frederick_word list	15.6	16.18	Hat
+ARI_Frederick_word list	ARI_Frederick_word list	19.035	19.955	Thought
+ARI_Frederick_word list	ARI_Frederick_word list	22.11	22.65	Put
+ARI_Frederick_word list	ARI_Frederick_word list	27.185	27.955	Heat
+ARI_Frederick_word list	ARI_Frederick_word list	28.785	29.375	Three
+ARI_Frederick_word list	ARI_Frederick_word list	30.995	31.905	Question
+ARI_Frederick_word list	ARI_Frederick_word list	32.795	33.355	Hit
+ARI_Frederick_word list	ARI_Frederick_word list	35.13	35.77	Hut
+ARI_Frederick_word list	ARI_Frederick_word list	36.895	37.555	Father
+ARI_Frederick_word list	ARI_Frederick_word list	38.71	40.43	As in Luke I am your father Star Wars
+ARI_Frederick_word list	ARI_Frederick_word list	41.135	41.775	Hate
+ARI_Frederick_word list	ARI_Frederick_word list	42.68	43.65	Dance
+ARI_Frederick_word list	ARI_Frederick_word list	45.2	46.08	I need to get a
+ARI_Frederick_word list	ARI_Frederick_word list	46.09	46.385	Hair
+ARI_Frederick_word list	ARI_Frederick_word list	46.385	46.785	Cut
+ARI_Frederick_word list	ARI_Frederick_word list	48.45	49.27	Heart
+ARI_Frederick_word list	ARI_Frederick_word list	50.295	51.055	Host
+ARI_Frederick_word list	ARI_Frederick_word list	51.56	52.23	Sorry
+ARI_Frederick_word list	ARI_Frederick_word list	52.43	53.15	Host
+ARI_Frederick_word list	ARI_Frederick_word list	53.785	54.455	After
