@@ -2515,16 +2515,35 @@ if __name__ == '__main__':
        prefix, output = arguments[1], arguments[2]
        wavInput1, grid1 = prefix + arguments[4],prefix+ arguments[5]
        wavInput2, grid2 = prefix + arguments[7],prefix+ arguments[8]
+       wavInput3, grid3 = prefix + arguments[9],prefix+ arguments[10]
+
        if os.path.exists(output):
            shutil.rmtree(output)
        os.mkdir(output)
        currentSpeaker = Speaker()
-       currentSpeaker.sex = arguments[9].replace("\n","").replace("\r","") 
-       currentSpeaker.age = arguments[10].replace("\n","").replace("\r","")
+       currentSpeaker.sex = arguments[11].replace("\n","").replace("\r","") 
+       currentSpeaker.age = arguments[12].replace("\n","").replace("\r","")
        currentSpeaker.name = prefix.replace("\n","").replace("\r","")
        currentSpeaker.tiernum = 0
        output1 = output +  "/completeoutput"
-       extractFormants([wavInput1,wavInput2], [grid1,grid2], output1, opts, currentSpeaker, allOutputFiles ) 
+
+       wavInputs = []
+       gridInputs = []
+       
+       if not (arguments[4] == "NA" or arguments[5] == "NA"):
+          wavInputs.append(wavInput1)
+          gridInputs.append(grid1)
+
+       if not (arguments[7] == "NA" or arguments[8] == "NA"):
+          wavInputs.append(wavInput2)
+          gridInputs.append(grid2)
+
+       if not (arguments[9] == "NA" or arguments[10] == "NA"):
+          wavInputs.append(wavInput3)
+          gridInputs.append(grid3)
+      
+
+       extractFormants(wavInputs, gridInputs, output1, opts, currentSpeaker, allOutputFiles ) 
     # Now that we have all the files, join them and print them at the current location
     # Lets get all the lines of all the files 
     allOutputlines = []
