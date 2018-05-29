@@ -59,6 +59,7 @@ OPTIONS="${OPTIONS} --removeStopWords"
 
 #########################################################################
 OPTIONS="${OPTIONS} --onlyMeasureStressed"
+#OPTIONS="${OPTIONS} --measureStressed"
 
 #########################################################################
 OUTPUTFORMAT=txt

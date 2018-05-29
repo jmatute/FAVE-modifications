@@ -1013,6 +1013,14 @@ def hasPrimaryStress(label):
     else:
         return False
 
+def hasSecondaryStress(label):
+    """checks whether a vowel has secondary stress"""
+
+    if label[-1] == '2':  # NOTE:  this assumes that there are no empty intervals on the phone tier!
+        return True
+    else:
+        return False
+
 
 def isVowel(label):
     """checks whether a phone is a vowel"""
@@ -1865,6 +1873,8 @@ def setup_parser():
     parser.add_argument("--nSmoothing", type=int, default=12,
                         help="Specifies the number of samples to be used for the smoothing of the formant tracks.")
     parser.add_argument("--onlyMeasureStressed", action="store_true")
+    parser.add_argument("--measureStressed", action="store_true")
+
     parser.add_argument("--outputFormat",   "-o",  choices = ['txt', 'text', 'plotnik', 'Plotnik', 'plt', 'both'], default="txt",
                         help = "Output format. Tab delimited file, plotnik file, or both.")    
     parser.add_argument("--preEmphasis", type=float, default=50,
@@ -2184,6 +2194,13 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
     nSmoothing = opts.nSmoothing
     removeStopWords = opts.removeStopWords
     measureUnstressed = not opts.onlyMeasureStressed
+    print "MEASURE UNSTRESSED", measureUnstressed
+    #parser.add_argument("--measureStressed", action="store_true")
+    measureBothStresses = opts.measureStressed
+    if measureUnstressed:
+        measureUnstressed =  not opts.measureStressed
+    print "MEASURE UNSTRESSED", measureUnstressed
+
     minVowelDuration = opts.minVowelDuration
     windowSize = opts.windowSize
     preEmphasis = opts.preEmphasis
@@ -2360,9 +2377,17 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
 
                 # skip this vowel if it doesn't have primary stress
                 # and the user only wants to measure stressed vowels
-                if not measureUnstressed and not hasPrimaryStress(p.label):
-                    count_unstressed += 1
-                    continue
+                if not measureUnstressed:
+                    if measureBothStresses:
+                      if not (hasPrimaryStress(p.label) or hasSecondaryStress(p.label)):
+                         print "Not measuring", p.label
+                         count_unstressed += 1
+                         continue
+                    if not measureBothStresses:
+                      if not hasPrimaryStress(p.label):
+                         print "Not measuring", p.label
+                         count_unstressed += 1
+                         continue
 
                 dur = round(p.xmax - p.xmin, 3)  # duration of phone
 
