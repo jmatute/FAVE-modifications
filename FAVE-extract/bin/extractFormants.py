@@ -80,6 +80,7 @@ import shutil
 import pickle
 import csv
 
+import lexical
 import numpy as np
 from itertools import tee, islice, izip
 from bisect import bisect_left
@@ -122,7 +123,17 @@ class Phone:
         self.pp = None  # preceding phone (Arpabet label)
         self.arpa = ''  # Arpabet coding WITHOUT stress digit
         self.stress = None  # stress digit
+        self.lexical = ''
 
+    def __str__(self):
+        xmin = " " if self.xmin is None else str(self.xmin)
+        xmax = " " if self.xmax is None else str(self.xmax)
+        pp = " " if self.pp is None else str(self.pp)
+        stress = " " if self.stress is None else str(self.stress)
+
+
+        return ",".join([self.label,self.code, xmin, xmax, self.cd, self.fm, self.fp, self.fv, self.ps,
+                         self.fs, str(self.overlap), pp, self.arpa, stress])
 
 class Speaker:
 
@@ -160,6 +171,7 @@ class VowelMeasurement:
         self.b2 = None  # bandwidth of second formant
         self.b3 = None  # bandwidth of third formant
         self.t = ''  # time of measurement
+        self.lexical_set = '' 
         self.code = ''  # Plotnik vowel code ("xx.xxxxx")
         self.cd = ''  # Plotnik code for vowel class
         self.fm = ''  # Plotnik code for manner of following segment
@@ -352,15 +364,24 @@ def anae(v, formants, times):
     return measurementPoint
 
 
-def calculateMeans(measurements):
+def calculateMeans(measurements, measurementType):
     """takes a list of vowel measurements and calculates the means for each vowel class"""
 
     # initialize vowel means
     means = {}
-    for p in plotnik.PLOTNIKCODES:
+
+    key_array = plotnik.PLOTNIKCODES
+    if measurementType == "lexical":
+        key_array = list(set(lexical.LEX_DICT.values()))    
+    if measurementType == "arpabet":
+        key_array = plotnik.VOWELS
+   
+    for p in key_array:
         newmean = VowelMean()
         newmean.pc = p
         means[p] = newmean
+
+
     # process measurements
     for m in measurements:
         # only include tokens with primary stress
@@ -395,18 +416,25 @@ def calculateMeans(measurements):
         if m.ps == '8':
             continue
         # add measurements to means object
+        
+        key = m.cd
+        if measurementType == "arpabet":
+           key = m.phone
+        if measurementType == "lexical":
+           key = m.lexical_set
+
         if m.f1:
-            means[m.cd].values[0].append(m.f1)
+            means[key].values[0].append(m.f1)
         if m.f2:
-            means[m.cd].values[1].append(m.f2)
+            means[key].values[1].append(m.f2)
         if m.f3:
-            means[m.cd].values[2].append(m.f3)
+            means[key].values[2].append(m.f3)
 
         # collect formant tracks
-        means[m.cd].trackvalues.append(m.tracks)
+        means[key].trackvalues.append(m.tracks)
 
     # calculate means and standard deviations
-    for p in plotnik.PLOTNIKCODES:
+    for p in key_array:
         for i in range(3):
             means[p].n[i] = len(means[p].values[i])
                                 # number of tokens for formant i
@@ -875,7 +903,7 @@ def getTransitionLength(minimum, maximum):
     return transition
 
 
-def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker, usePadding):
+def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker, usePadding, measurementType):
     """makes a vowel measurement"""
 
     vowelWavFile = vowelFileStem + '.wav'
@@ -896,15 +924,13 @@ def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMe
     # via Praat:  ## NOTE:  all temp files are in the "/bin" directory!
     else:   # assume praat here
         if formantPredictionMethod == 'mahalanobis':
-            # get measurements for nFormants = 3, 4, 5, 6
+            # get measurements for nFormants = 3, 4, 5, 6,7
             LPCs = []
             nFormants = 3
-            while nFormants <= 6:
+            while nFormants <= 7:
                 command =os.path.join(PRAATPATH, PRAATNAME) + ' ' + os.path.join(SCRIPTS_HOME, 'extractFormants.praat') + ' ' + vowelWavFile + ' ' + str(nFormants) + ' ' + str(maxFormant) + ' ' ' ' + str(windowSize) + ' ' + str(preEmphasis) + ' burg'
                 
                 fname = vowelWavFile[-7:]
-                if fname == "AE1.wav":
-                    print "Command Used for PRAAT with ", nFormants, ">>",command
                 os.system(command)
                 lpc = praat.Formant()
                 lpc.read(os.path.join(SCRIPTS_HOME, vowelFileStem + '.Formant'))
@@ -942,16 +968,16 @@ def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMe
             poles.append(lpc.formants())
             bandwidths.append(lpc.bandwidths())
         fname = vowelWavFile[-7:]
-        debug = (fname == "AE1.wav")
+        debug = False
         vm = measureVowel(p, w, poles, bandwidths, convertedTimes, intensity, measurementPointMethod,
-            formantPredictionMethod, padBeg, padEnd, means, covs,debug, usePadding)
+            formantPredictionMethod, padBeg, padEnd, means, covs,debug, usePadding, measurementType)
     # default:
     else:   # assume 'default' here
         convertedTimes = [convertTimes(fmt.times(), p.xmin - padBeg)]
         formants = [fmt.formants()]
         bandwidths = [fmt.bandwidths()]
         vm = measureVowel(p, w, formants, bandwidths, convertedTimes, intensity, measurementPointMethod,
-            formantPredictionMethod, padBeg, padEnd, '', '', False, usePadding)
+            formantPredictionMethod, padBeg, padEnd, '', '', False, usePadding, measurementType)
 
     os.remove(os.path.join(SCRIPTS_HOME, vowelWavFile))
     return vm
@@ -982,13 +1008,15 @@ def getWordsAndPhones(tg, phoneset, speaker, vowelSystem):
             phone.label = p.mark().upper()
             phone.xmin = p.xmin()
             phone.xmax = p.xmax()
-            word.phones.append(phone)
+            word.phones.append(phone)           
             # count initial number of vowels here! (because uncertain
             # transcriptions are discarded on a by-word basis)
             if phone.label and isVowel(phone.label):
                 global count_vowels
-                count_vowels += 1
-         
+                count_vowels += 1         
+                key = word.transcription.lower() 
+                if key in lexical.LEX_DICT:
+                    phone.lexical = lexical.LEX_DICT[key] 
         words.append(word)
 
     # add Plotnik-style codes for the preceding and following segments for all
@@ -1065,7 +1093,9 @@ def loadCovs(inFile):
 def loadMeans(inFile):
     """reads formant means of training data set from file"""
 
-    means = {}
+    #Means is a dictionary where the key is the plotnik code
+    #and the rest are the F1,F2,B1,B2(?)
+    means = {} # the key is the first value in the code
     for line in open(inFile, 'rU').readlines():
         vowel = line.strip().split('\t')[0]
         means[vowel] = np.array([float(x)
@@ -1115,7 +1145,7 @@ def mean_stdv(valuelist):
     return mean, stdv
 
 
-def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPointMethod, formantPredictionMethod, padBeg, padEnd, means, covs, debug, usePadding):
+def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPointMethod, formantPredictionMethod, padBeg, padEnd, means, covs, debug, usePadding, measurementType):
     """returns vowel measurement (formants, bandwidths, labels, Plotnik codes)"""
 
     # smooth formant tracks and bandwidths, if desired
@@ -1141,7 +1171,7 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
         measurementPoints = []
         all_tracks = []
         # predict F1 and F2 based on the LPC values at this point in time
-        for j in range(4):
+        for j in range(len(poles)):
             # get point of measurement and corresponding index (closest to point of measurement) according to method specified in config file
             # NOTE:  Point of measurement and time index will be the same for "third", "mid", "fourth" methods for all values of nFormants
             # For "lennig", "anae" and "faav", which depend on the shape of the
@@ -1157,7 +1187,7 @@ def measureVowel(phone, word, poles, bandwidths, times, intensity, measurementPo
             else:
                 all_tracks.append(getFormantTracks(poles[j], times[j], phone.xmin, phone.xmax))
 
-        f1, f2, f3, b1, b2, b3, winnerIndex = predictF1F2(phone, selectedpoles, selectedbandwidths, means, covs)
+        f1, f2, f3, b1, b2, b3, winnerIndex = predictF1F2(phone, selectedpoles, selectedbandwidths, means, covs, measurementType)
         # check that we actually do have a measurement (this may not be the
         # case for gaps in the wave form)
         if not f1 and not f2 and not f3 and not b1 and not b2 and not b3:
@@ -1290,7 +1320,7 @@ def modifyIntensityCutoff(beg_cutoff, end_cutoff, phone, intensities, times):
     return beg_cutoff, end_cutoff
 
 
-def normalize(measurements, m_means):
+def normalize(measurements, m_means, measurementType):
     """normalized measurements according to the Lobanov method"""
 
     values = [[], [], []]
@@ -1332,9 +1362,17 @@ def normalize(measurements, m_means):
             else:
                 m.norm_tracks.append('')  # F1
                 m.norm_tracks.append('')  # F2
+    
+
+
+    key_array = plotnik.PLOTNIKCODES
+    if measurementType == "lexical":
+        key_array = list(set(lexical.LEX_DICT.values()))    
+    if measurementType == "arpabet":
+        key_array = plotnik.VOWELS
 
     # normalize the means and standard deviations for F1 and F2
-    for p in plotnik.PLOTNIKCODES:
+    for p in key_array:
         # F1 mean
         try:
             m_means[p].norm_means[0] = round(650 + 150 * (lobanov(m_means[p].means[0], grand_means[0], grand_stdvs[0])), 0)
@@ -1406,7 +1444,8 @@ def outputFormantSettings(measurements, speaker, outputFile):
         for nf in range(3, 8):
             count[(str(code), nf)] = 0
     for vm in measurements:
-        count[(str(vm.cd), int(vm.nFormants))] += 1
+        if vm.nFormants != 99:
+            count[(str(vm.cd), int(vm.nFormants))] += 1
 
     # filename = name of the output file, but with extension "nFormants"
     outfilename = os.path.splitext(outputFile)[0] + ".nFormants"
@@ -1442,7 +1481,7 @@ def outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile,
 
             fw.write('\t'.join(s_keys))
             fw.write('\t')
-            fw.write('\t'.join(['vowel', 'stress', 'pre_word', 'word', 'fol_word', 
+            fw.write('\t'.join(['vowel', 'stress','lexical_set', 'pre_word', 'word', 'fol_word', 
                                 'F1', 'F2', 'F3', 
                                 'B1', 'B2', 'B3', 't', 'beg', 'end', 'dur',
                                 'plt_vclass', 'plt_manner', 'plt_place', 
@@ -1466,7 +1505,7 @@ def outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile,
             for speaker_attr in s_keys:
                 fw.write(str(s_dict[speaker_attr]))
                 fw.write('\t')
-            fw.write('\t'.join([vm.phone, str(vm.stress), vm.pre_word, vm.word, vm.fol_word, str(vm.f1)]))
+            fw.write('\t'.join([vm.phone, str(vm.stress), vm.lexical_set,vm.pre_word, vm.word, vm.fol_word, str(vm.f1)]))
                      # vowel (ARPABET coding), stress, word, F1
 
             fw.write('\t')
@@ -1659,7 +1698,7 @@ def parseStopWordsFile(f):
     return stopWords
 
 
-def predictF1F2(phone, selectedpoles, selectedbandwidths, means, covs):
+def predictF1F2(phone, selectedpoles, selectedbandwidths, means, covs,measurementType):
     """returns F1 and F2 (and bandwidths) as determined by Mahalanobis distance to ANAE data"""
 
     # phone = vowel to be analyzed
@@ -1667,14 +1706,20 @@ def predictF1F2(phone, selectedpoles, selectedbandwidths, means, covs):
     # bandwidths =
     # means =
     # covs =
+    vowel = phone.cd
+    if measurementType == "arpabet":
+        vowel = phone.label[:-1]
+    if measurementType == "lexical":
+        vowel = phone.lexical
 
-    vowel = phone.cd  # Plotnik vowel code
+    print "PREDICTING F1 F2 ", vowel
     values = []
         # this list keeps track of all pairs of poles/bandwidths "tested"
     distances = []
         # this list keeps track of the corresponding value of the Mahalanobis distance
     # for all values of nFormants:
     if vowel in means:
+        print "Vowel Found in means "
         for poles, bandwidths in zip(selectedpoles, selectedbandwidths):
             # check that there are at least two formants in the selected frame
             if len(poles) >= 2:
@@ -1899,6 +1944,8 @@ def setup_parser():
                         help = "Write full formant tracks.")
     parser.add_argument("--vowelSystem", choices = ['phila', 'Phila', 'PHILA', 'NorthAmerican', 'simplifiedARPABET'],
                         default="NorthAmerican",help="If set to Phila, a number of vowels will be reclassified to reflect the phonemic distinctions of the Philadelphia vowel system.")
+    parser.add_argument("--vowelMeasurementType", choices = ['arpabet','plotnik','lexical'],
+                        default="plotnik",help="The keys to be used in the means and covariances for the mean and covariances comparison. ")
     parser.add_argument("--verbose", "-v", action="store_true",
                         help = "verbose output. useful for debugging")
     parser.add_argument("--padding", "-pa", action="store_true",
@@ -1917,6 +1964,7 @@ def setup_parser():
     #                    help="File stem for output")
     
     return(parser)                            
+
 
 def smoothTracks(poles, s):
     """smoothes formant/bandwidth tracks by averaging over a window of 2s+1 samples"""
@@ -2175,6 +2223,7 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
     covsFile = opts.covariances
     phonesetFile = opts.phoneset
     stopWordsFile = opts.stopWordsFile
+    vowelMeasurementType = opts.vowelMeasurementType
 
     if stopWordsFile:
         opts.stopWords = parseStopWordsFile(stopWordsFile)
@@ -2227,10 +2276,10 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
     # we need to load files with the mean and covariance values
     if formantPredictionMethod == 'mahalanobis':
         global means, covs
+        print meansFile
         means = loadMeans(meansFile)  # "means.txt"
         covs = loadCovs(covsFile)  # "covs.txt"
-        print "Read means and covs files for the Mahalanobis method."
-
+        print "Means?", means.keys()
     # put the list of stop words in upper or lower case to match the word
     # transcriptions
     newStopWords = []
@@ -2454,10 +2503,10 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
                 # maxTime = duration of sound file/TextGrid
                 extractPortion(wavFile, vowelWavFile, p.xmin - padBeg, p.xmax + padEnd, soundEditor, True)
 
-                if vowelFileStem[-3:] == "AE1":
-                    print "\n",w.transcription
+                # Here, for the vowel measurements we need to have the values
+
                 vm = getVowelMeasurement(vowelFileStem, p, w, opts.speechSoftware,
-                                         formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker, opts.padding )
+                                         formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker, opts.padding,vowelMeasurementType )
 
                 if vm:  # if vowel is too short for smoothing, nothing will be returned
                     vm.context = p_context
@@ -2465,6 +2514,7 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
                     vm.fol_seg = fol_seg
                     vm.p_index = str(p_index+1)
                     vm.word_trans = word_trans
+                    vm.lexical_set = p.lexical
                     vm.pre_word_trans = pre_word_trans
                     vm.fol_word_trans = fol_word_trans
                     vm.pre_word = pre_w.transcription
@@ -2478,7 +2528,7 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
             for measurement in measurements:
 		if measurement.phone == "AE":
 		    print measurement.phone, measurement.f1, measurement.f2 , measurement.f3, measurement.nFormants, measurement.oFormants
-            measurements = remeasure(measurements, opts.keep , opts.minAmountTokens)
+            measurements = remeasure(measurements, opts.keep , opts.minAmountTokens, vowelMeasurementType)
 	    
             print  "After >"
             for measurement in measurements:
@@ -2493,20 +2543,10 @@ def extractFormants(wavInput, tgInput, output, opts, currentSpeaker, allOutputFi
         # (this prevents the creation of empty output files)
         # if len(measurements) > 0:
         # calculate measurement means
-    m_means = calculateMeans(measurements)
-    print "Applying Normalization "  
+    m_means = calculateMeans(measurements, vowelMeasurementType)
     # normalize measurements
-    for measurement in measurements:
-        if measurement.phone == "AE":
-            print measurement.phone, measurement.f1, measurement.f2
+    measurements, m_means = normalize(measurements, m_means, vowelMeasurementType)
 
-    measurements, m_means = normalize(measurements, m_means)
-    print "*"*20
-    for measurement in measurements:
-        if measurement.phone == "AE":
-            print measurement.phone, measurement.f1, measurement.f2
-
-    print ''
     outputMeasurements(outputFormat, measurements, m_means, speaker, outputFile, outputHeader, opts.tracks, allOutputFiles)
 
     if opts.pickle:

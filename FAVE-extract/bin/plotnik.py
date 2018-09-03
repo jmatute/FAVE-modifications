@@ -126,7 +126,7 @@ def arpabet2plotnik(ac, stress, trans, prec_p, foll_p, phoneset, fm, fp, fv, ps,
     # pc = Plotnik code
 
 #  print "\tac:  %s\tprec_p:  %s\tfoll_p:  %s\tfm:  %s\tfp:  %s\tfv:  %s\tps:  %s\tfs:  %s\ttrans:  %s"  % (ac, prec_p, foll_p, fm, fp, fv, ps, fs, trans)
-#  print ','.join([ac, prec_p, foll_p, fm, fp, fv, ps, fs, trans])
+    #print ','.join([ac, prec_p, foll_p, fm, fp, fv, ps, fs, trans])
 
     # if different consonant inventories are used, just use the plain
     # conversions
@@ -159,6 +159,7 @@ def arpabet2plotnik(ac, stress, trans, prec_p, foll_p, phoneset, fm, fp, fv, ps,
     else:
         pc = A2P[ac]
 
+    #print pc
     return pc
 
 
@@ -172,6 +173,7 @@ def cmu2plotnik_code(i, phones, trans, phoneset, speaker, vowelSystem):
     # don't do anything if it's a consonant
     if not is_v(phones[i].label):
         return None, None
+
 
     # FOLLOWING SEGMENT:
     # if the vowel is the final phone in the list, then there is no following segment

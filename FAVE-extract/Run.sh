@@ -18,9 +18,25 @@ OPTIONS="${OPTIONS} --candidates"
 CASE=lower
 OPTIONS="${OPTIONS} --case ${CASE}"
 
+#############################################################
+#TYPE=plotnik  
+TYPE=lexical
+# possible types are plotnik, lexical, arpabet... the means and covariances
+# are dependent on this value so make sure means and covariance file relate to it
+OPTIONS="${OPTIONS} --vowelMeasurementType ${TYPE}"
+
+
+###############################################################
+
+#MEANSFILE=plotnik_without_frederik_means.txt 
+#MEANSFILE=means.txt
+MEANSFILE=lexical_without_frederik_means.txt 
+OPTIONS="${OPTIONS} --means ${MEANSFILE}"
 
 #########################################################################
-COVARIANCESFILE=covs.txt
+#COVARIANCESFILE=covs.txt
+#COVARIANCESFILE=plotnik_without_frederik_covs.txt
+COVARIANCESFILE=lexical_without_frederik_covs.txt
 OPTIONS="${OPTIONS} --covariances ${COVARIANCESFILE}"
 
 
@@ -32,10 +48,6 @@ OPTIONS="${OPTIONS} --formantPredictionMethod ${PREDICTIONMETHOD}"
 #########################################################################
 MAXFORMANT=5000
 OPTIONS="${OPTIONS} --maxFormant ${MAXFORMANT}"
-
-#########################################################################
-MEANSFILE=means.txt
-OPTIONS="${OPTIONS} --means ${MEANSFILE}"
 
 #########################################################################
 MEASUREMENTPOINT=mid

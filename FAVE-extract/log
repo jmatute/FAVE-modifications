@@ -1,19 +1,10 @@
---candidates --case lower --covariances covs.txt --formantPredictionMethod mahalanobis --maxFormant 5000 --means means.txt --measurementPointMethod mid --minVowelDuration 0.001 --nFormants 5 --nSmoothing 0 --removeStopWords --measureStressed --outputFormat txt --preEmphasis 50 --phoneset cmu_phoneset.txt --remeasurement --speechSoftware praat --tracks --vowelSystem NorthAmerican --stopWordsFile ./stoplist_capitals_ut.txt --verbose --padding --minAmountTokens 7 --windowSize 0.025
-Analysing a total of  2 Speakers 
-['1', './INPUTFILES/DASS/', './DASS', 'ARI_Dass_I_word list.txt', 'ARI_Dass_I_word_list.wav', 'ARI_Dass_I_word_list.TextGrid', 'ARI_Dass_I_reading passage.txt', 'ARI_Dass_I_reading_passage.wav', 'ARI_Dass_I_reading_passage.TextGrid', 'NA', 'NA', 'F', '55\n']
-OS NAME: posix
-Praat defined but not found by command
-Processed options.
-Read CMU phone set.
-Speech software to be used is praat.
-Sound editor to be used is sox.
-Read means and covs files for the Mahalanobis method.
-Supposed stop words ['question', 'three', 'tourism', 'in', 'the', 'caribbean', 'tourists', 'have', 'been', 'to', 'of', 'for', 'years', 'on', 'nevis', 'springs', 'one', 'its', 'attractions', 'foreign', 'and', 'by', 'was', 'a', 'wealthy', 'with', 'it', 'not', 'until', 'regular', 'up', 'travel', 'industry', 'is', 'thriving', 'million', 'year', 'they', 'just', 'few', 'from', 'as', 'always', 'were', 'warm', 'coral', 'reefs', 'beautiful', 'white', 'colorful', 'colourful', 'weahther', 'music', 'welcoming', 'while', 'their', 'french', 'martinique', 'tourist', 'an', 'what', 'rather', 'than', 'waterfalls', 'dominica', 'draw', 'does', 'belize', 'nearby', 'hot', 'popular', 'common', 'clearly', 'air', 'hop', 'comma', 'hear', 'hair', 'hole']
-Identified vowels in the TextGrid.
-Going for the words Total Words  90
-
-Extracting formants for vowel AE1 in word that at 0.902
-sox ./INPUTFILES/DASS/ARI_Dass_I_word_list.wav -t wavpcm bin/ARI_Dass_I_word_list_AE1.wav trim 0.943 0.202
-
-that
-Command Used for PRAAT with  3 >> praat bin/extractFormants.praat ARI_Dass_I_word_list_AE1.wav 3 5500  0.025 50.0 burg
+Traceback (most recent call last):
+  File "bin/extractFormants.py", line 2574, in <module>
+    extractFormants(wavInputs, gridInputs, output1, opts, currentSpeaker, allOutputFiles ) 
+  File "bin/extractFormants.py", line 2463, in extractFormants
+    formantPredictionMethod, measurementPointMethod, nFormants, maxFormant, windowSize, preEmphasis, padBeg, padEnd, speaker, opts.padding )
+  File "bin/extractFormants.py", line 910, in getVowelMeasurement
+    lpc.read(os.path.join(SCRIPTS_HOME, vowelFileStem + '.Formant'))
+  File "/u/matutefl/Cooperation_Philipp/FAVE/FAVE-extract/bin/praat.py", line 74, in read
+    text = open(file, 'rU')
+IOError: [Errno 2] No such file or directory: 'bin/ARI_Dass_I_word_list_AO1.Formant'

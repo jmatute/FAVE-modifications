@@ -106,7 +106,7 @@ def loadfile(file):
     return measurements
 
 
-def createVowelDictionary(measurements):
+def createVowelDictionary(measurements, measurementType):
     """
     Creates a dictionary of F1, F2, B1, B3 and Duration observations by vowel type.
     vowel index indicates the index in lines[x] which should be taken as identifying vowel categories.
@@ -115,13 +115,20 @@ def createVowelDictionary(measurements):
     #sys.stderr.write("Creating vowel dictionary...")
 
     for vm in measurements:
-        if vm.cd in vowels:
+        key = vm.cd
+        if measurementType == "arpabet":
+           key = vm.phone
+        if measurementType == "lexical":
+           key = vm.lexical_set
+        
+
+        if key in vowels:
 #            vowels[vowel].append([F1, F2,F3,  B1, B2, B3, Dur])
-            vowels[vm.cd].append(
+            vowels[key].append(
                 [vm.f1, vm.f2,  math.log(vm.b1), math.log(vm.b2), math.log(vm.dur)])
         else:
 #            vowels[vowel] = [[F1, F2, F3, B1, B2, B3, Dur]]
-            vowels[vm.cd] = [
+            vowels[key] = [
                 [vm.f1, vm.f2,  math.log(vm.b1), math.log(vm.b2), math.log(vm.dur)]]
 
     #sys.stderr.write("Vowel dictionary created\n")
@@ -195,7 +202,7 @@ def calculateVowelMeans(vowels, minAmountTokens):
     return vowelMeans, vowelCovs
 
 
-def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks, minAmountTokens):
+def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks, minAmountTokens, measurementType):
     """
     Predicts F1 and F2 from the speaker's own vowel distributions based on the mahalanobis distance.
     """
@@ -207,7 +214,10 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks, mi
         distanceList = []
         nFormantsList = []
         vowel = vm.cd
-
+        if measurementType == "arpabet":
+           vowel = vm.phone
+        if measurementType == "lexical":
+           vowel = vm.lexical_set
         # if no remeasurement takes place, the new winner index will be automatically zero (see the three cases listed below)
         # but we actually want to keep the old values for the formant tracks
         # keepOldTracks = False
@@ -265,11 +275,11 @@ def repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks, mi
                     valuesList.append(
                         [float(vm.f1), float(vm.f2), vm.f3, math.log(float(vm.b1)), math.log(float(vm.b2)), vm.b3, lDur])
                     distanceList.append(0)
-                    nFormantsList.append(7)
+                    nFormantsList.append(99)
                     #nFormantsList.append(i + 3)
         
         winnerIndex = distanceList.index(min(distanceList))
-        if nFormantsList[winnerIndex] == 7:
+        if nFormantsList[winnerIndex] == 99:
             # keep the same tracks if the winner index is 7, i.e. calculation could not be redone
             idx, d = -1, 1000
             for i in range(4):
@@ -352,13 +362,13 @@ def output(remeasurements):
     fw.close()
 
 
-def remeasure(measurements, keepOldTracks, minAmountTokens):
+def remeasure(measurements, keepOldTracks, minAmountTokens, measurementType):
     print "Remeasuring with minimum ", minAmountTokens, " tokens"
-    vowels = createVowelDictionary(measurements)
+    vowels = createVowelDictionary(measurements, measurementType)
     vowelMeans, vowelCovs = calculateVowelMeans(vowels, minAmountTokens)
     invowels = excludeOutliers(vowels, vowelMeans, vowelCovs)
     vowelMeans, vowelCovs = calculateVowelMeans(invowels, minAmountTokens)
-    remeasurements = repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks, minAmountTokens)
+    remeasurements = repredictF1F2(measurements, vowelMeans, vowelCovs, vowels, keepOldTracks, minAmountTokens,measurementType)
     return remeasurements
 
 # Main Program Starts Here
