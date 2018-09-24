@@ -1,10 +1,17 @@
-Mon Sep 24 17:27:02 2018
+Mon Sep 24 19:01:50 2018
 Not using Git version control. Version info unavailable.
 Consider installing Git (http://git-scm.com/).         and cloning this repository from GitHub with: 
           git clone git@github.com:JoFrhwld/FAVE.git
 Uncommitted changes when run:
- FAVE-extract/Run.sh | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ FAVE-extract/CompleteResult.txt                  |    34 +-
+ FAVE-extract/Frederick/completeoutput .csv       |   111 -
+ FAVE-extract/Frederick/completeoutput.formantlog |   172 -
+ FAVE-extract/Frederick/completeoutput.nFormants  |    16 +-
+ FAVE-extract/Frederick/completeoutput.tracks     | 15966 ++++++++++-----------
+ FAVE-extract/Frederick/completeoutput.txt        |   172 +-
+ FAVE-extract/Frederick/completeoutput_norm.txt   |   220 +-
+ FAVE-extract/bin/fave-gui.py                     |     2 +-
+ 8 files changed, 8205 insertions(+), 8488 deletions(-)
 
 
 extractFormants statistics for file passage.wav:
@@ -14,9 +21,9 @@ Total number of vowels (initially):	425
 ->	Number of vowels discarded:	315	(74.1%)
 
 Duration of sound file:		102.952 seconds
-Time for program run:		48.666 seconds
-->	0.442 seconds per analyzed vowel
-->	0.473 times real time
+Time for program run:		50.024 seconds
+->	0.455 seconds per analyzed vowel
+->	0.486 times real time
 
 Excluded:
 - Uncertain transcriptions:		0	(0.0%)
@@ -43,8 +50,8 @@ extractFormant settings:
 - outputHeader:			True
 - case:				lower
 - multipleFiles:		False
-- meansFile:			/u/matutefl/Cooperation_Philipp/FAVE/base2_means.txt
-- covsFile:			/u/matutefl/Cooperation_Philipp/FAVE/base2_covs.txt
+- meansFile:			/u/matutefl/Cooperation_Philipp/FAVE/FAVE-extract/means.txt
+- covsFile:			/u/matutefl/Cooperation_Philipp/FAVE/FAVE-extract/covs.txt
 - remeasurement:		True
 - vowelSystem:		NorthAmerican
 - pickle		False
@@ -54,119 +61,119 @@ extractFormant settings:
 Time statistics:
 
 count	time	d(time)	token
-start	1537802774.04	
-prelim1	1537802774.09	0.05	
-prelim2	1537802774.1	0.008	
-1	1537802774.1	0.0	AE1 in that
-2	1537802774.75	0.648	UW1 in tooth
-3	1537802775.23	0.481	EH1 in better
-4	1537802775.59	0.365	ER1 in hurt
-5	1537802776.08	0.488	AW1 in house
-6	1537802776.65	0.573	AW1 in town
-7	1537802777.13	0.48	AE1 in hat
-8	1537802777.44	0.307	AO1 in thought
-9	1537802777.91	0.471	UH1 in put
-10	1537802778.21	0.301	IY1 in heat
-11	1537802778.57	0.362	IH1 in hit
-12	1537802778.91	0.334	AH1 in hut
-13	1537802779.27	0.362	AA1 in father
-14	1537802779.78	0.507	AA1 in father
-15	1537802780.22	0.447	EY1 in hate
-16	1537802780.59	0.369	AE1 in dance
-17	1537802781.03	0.437	AH1 in cut
-18	1537802781.38	0.35	AA1 in heart
-19	1537802781.92	0.54	OW1 in host
-20	1537802782.49	0.567	AE1 in after
-prelim1	1537802782.98	0.491	
-prelim2	1537802783.01	0.036	
-21	1537802783.01	0.0	AH1 in coming
-22	1537802783.42	0.405	AE1 in sample
-23	1537802783.8	0.384	AY1 in delights
-24	1537802784.25	0.445	OW1 in over
-25	1537802784.78	0.534	UW1 in two
-26	1537802785.51	0.731	AH1 in hundred
-27	1537802785.86	0.351	AE1 in bath
-28	1537802786.29	0.421	OW1 in hotel
-29	1537802786.69	0.407	AY1 in island
-30	1537802787.19	0.501	ER1 in first
-31	1537802787.69	0.499	OW1 in opened
-32	1537802788.05	0.359	EH1 in seven
-33	1537802788.51	0.461	IY1 in teen
-34	1537802788.91	0.398	EH1 in seventy
-35	1537802789.17	0.26	EY1 in eight
-36	1537802789.48	0.313	IY1 in being
-37	1537802789.79	0.308	EY1 in main
-38	1537802790.18	0.393	IH1 in visitors
-39	1537802790.47	0.286	EY1 in late
-40	1537802790.84	0.371	AY1 in nineteenth
-41	1537802791.23	0.394	IY1 in nineteenth
-42	1537802791.57	0.336	EH1 in century
-43	1537802791.92	0.346	EY1 in destination
-44	1537802792.29	0.377	OW1 in those
-45	1537802792.88	0.586	AY1 in time
-46	1537802793.55	0.674	EY1 in make
-47	1537802793.91	0.358	ER1 in journey
-48	1537802794.27	0.357	EH1 in however
-49	1537802794.63	0.361	AE1 in advent
-50	1537802795.03	0.396	AE1 in international
-51	1537802795.45	0.421	AY1 in flights
-52	1537802795.99	0.548	AY1 in nineteen
-53	1537802796.56	0.563	IH1 in sixties
-54	1537802796.84	0.28	AA1 in market
-55	1537802797.24	0.401	AA1 in started
-56	1537802797.66	0.424	OW1 in open
-57	1537802798.06	0.399	AE1 in man
-58	1537802798.46	0.397	EY1 in today
-59	1537802799.13	0.675	IH1 in visit
-60	1537802799.48	0.349	IY1 in each
-61	1537802799.88	0.393	AH1 in come
-62	1537802800.3	0.425	OW1 in both
-63	1537802800.76	0.463	IY1 in sea
-64	1537802801.24	0.473	AH1 in some
-65	1537802801.61	0.369	EY1 in staying
-66	1537802802.11	0.507	AW1 in hours
-67	1537802802.74	0.628	AY1 in island
-68	1537802803.3	0.564	AY1 in island
-69	1537802803.89	0.586	AW1 in found
-70	1537802804.42	0.532	AY1 in islands
-71	1537802804.92	0.501	EY1 in remain
-72	1537802805.34	0.414	IY1 in seas
-73	1537802805.94	0.6	AE1 in dazzling
-74	1537802806.4	0.466	AE1 in sand
-75	1537802806.84	0.44	IY1 in beaches
-76	1537802807.17	0.323	ER1 in birds
-77	1537802807.71	0.54	AH1 in sunny
-78	1537802808.08	0.376	AH1 in stunning
-79	1537802808.48	0.394	AH1 in sunsets
-80	1537802808.89	0.415	AY1 in lively
-81	1537802809.5	0.606	AE1 in dance
-82	1537802810.03	0.536	AO1 in course
-83	1537802810.53	0.501	IY1 in people
-84	1537802810.84	0.307	IH1 in visitors
-85	1537802811.2	0.356	EY1 in favoured
-86	1537802811.69	0.496	AY1 in islands
-87	1537802812.28	0.583	AO1 in according
-88	1537802812.64	0.362	IH1 in english
-89	1537802812.96	0.323	IH1 in visiting
-90	1537802813.28	0.321	EY1 in barbados
-91	1537802813.68	0.402	EY1 in jamaica
-92	1537802814.11	0.426	EH1 in heading
-93	1537802814.42	0.31	EY1 in today's
-94	1537802814.91	0.488	AW1 in without
-95	1537802815.36	0.445	AW1 in doubt
-96	1537802815.87	0.511	AO1 in more
-97	1537802816.37	0.508	AY1 in likely
-98	1537802816.88	0.503	IH1 in pick
-99	1537802817.2	0.327	AY1 in island
-100	1537802817.8	0.6	AO1 in offers
-101	1537802818.22	0.418	EY1 in associations
-102	1537802818.78	0.557	AW1 in thousands
-103	1537802819.3	0.522	IH1 in visit
-104	1537802819.52	0.216	EY1 in barbados
-105	1537802819.84	0.318	IY1 in beaches
-106	1537802820.11	0.276	AW1 in mountains
-107	1537802820.63	0.52	AA1 in large
-108	1537802821.24	0.608	AH1 in number
-109	1537802821.58	0.337	IH1 in visitors
-110	1537802821.9	0.324	UW1 in blue
-end	1537802822.71	0.808	
+start	1537808460.26	
+prelim1	1537808460.29	0.024	
+prelim2	1537808460.3	0.008	
+1	1537808460.3	0.0	AE1 in that
+2	1537808460.76	0.461	UW1 in tooth
+3	1537808461.19	0.44	EH1 in better
+4	1537808461.61	0.413	ER1 in hurt
+5	1537808462.12	0.507	AW1 in house
+6	1537808462.67	0.558	AW1 in town
+7	1537808463.21	0.54	AE1 in hat
+8	1537808463.61	0.399	AO1 in thought
+9	1537808464.11	0.495	UH1 in put
+10	1537808464.47	0.36	IY1 in heat
+11	1537808464.88	0.413	IH1 in hit
+12	1537808465.2	0.322	AH1 in hut
+13	1537808465.56	0.356	AA1 in father
+14	1537808466.06	0.498	AA1 in father
+15	1537808466.52	0.466	EY1 in hate
+16	1537808467.03	0.505	AE1 in dance
+17	1537808467.61	0.584	AH1 in cut
+18	1537808468.06	0.447	AA1 in heart
+19	1537808468.68	0.618	OW1 in host
+20	1537808469.21	0.531	AE1 in after
+prelim1	1537808469.77	0.562	
+prelim2	1537808469.8	0.031	
+21	1537808469.8	0.0	AH1 in coming
+22	1537808470.11	0.308	AE1 in sample
+23	1537808470.54	0.43	AY1 in delights
+24	1537808471.06	0.519	OW1 in over
+25	1537808471.66	0.603	UW1 in two
+26	1537808472.49	0.825	AH1 in hundred
+27	1537808472.93	0.439	AE1 in bath
+28	1537808473.47	0.54	OW1 in hotel
+29	1537808473.91	0.448	AY1 in island
+30	1537808474.56	0.64	ER1 in first
+31	1537808475.05	0.491	OW1 in opened
+32	1537808475.48	0.432	EH1 in seven
+33	1537808475.87	0.389	IY1 in teen
+34	1537808476.37	0.505	EH1 in seventy
+35	1537808476.75	0.383	EY1 in eight
+36	1537808477.28	0.527	IY1 in being
+37	1537808477.66	0.375	EY1 in main
+38	1537808478.13	0.475	IH1 in visitors
+39	1537808478.44	0.314	EY1 in late
+40	1537808478.91	0.47	AY1 in nineteenth
+41	1537808479.44	0.527	IY1 in nineteenth
+42	1537808479.78	0.336	EH1 in century
+43	1537808480.12	0.341	EY1 in destination
+44	1537808480.53	0.41	OW1 in those
+45	1537808481.06	0.53	AY1 in time
+46	1537808481.79	0.729	EY1 in make
+47	1537808482.18	0.39	ER1 in journey
+48	1537808482.62	0.44	EH1 in however
+49	1537808483.0	0.386	AE1 in advent
+50	1537808483.37	0.368	AE1 in international
+51	1537808483.74	0.367	AY1 in flights
+52	1537808484.2	0.466	AY1 in nineteen
+53	1537808484.78	0.578	IH1 in sixties
+54	1537808485.1	0.321	AA1 in market
+55	1537808485.64	0.541	AA1 in started
+56	1537808486.11	0.464	OW1 in open
+57	1537808486.54	0.429	AE1 in man
+58	1537808486.95	0.412	EY1 in today
+59	1537808487.57	0.624	IH1 in visit
+60	1537808487.93	0.36	IY1 in each
+61	1537808488.29	0.361	AH1 in come
+62	1537808488.75	0.456	OW1 in both
+63	1537808489.22	0.471	IY1 in sea
+64	1537808489.76	0.537	AH1 in some
+65	1537808490.12	0.36	EY1 in staying
+66	1537808490.66	0.539	AW1 in hours
+67	1537808491.29	0.637	AY1 in island
+68	1537808491.88	0.592	AY1 in island
+69	1537808492.54	0.651	AW1 in found
+70	1537808493.07	0.53	AY1 in islands
+71	1537808493.59	0.527	EY1 in remain
+72	1537808494.13	0.537	IY1 in seas
+73	1537808494.79	0.655	AE1 in dazzling
+74	1537808495.33	0.544	AE1 in sand
+75	1537808495.85	0.524	IY1 in beaches
+76	1537808496.21	0.357	ER1 in birds
+77	1537808496.78	0.568	AH1 in sunny
+78	1537808497.03	0.249	AH1 in stunning
+79	1537808497.27	0.242	AH1 in sunsets
+80	1537808497.56	0.287	AY1 in lively
+81	1537808498.13	0.576	AE1 in dance
+82	1537808498.58	0.449	AO1 in course
+83	1537808498.92	0.344	IY1 in people
+84	1537808499.15	0.228	IH1 in visitors
+85	1537808499.35	0.195	EY1 in favoured
+86	1537808499.64	0.295	AY1 in islands
+87	1537808500.09	0.441	AO1 in according
+88	1537808500.44	0.36	IH1 in english
+89	1537808500.79	0.349	IH1 in visiting
+90	1537808501.17	0.372	EY1 in barbados
+91	1537808501.56	0.396	EY1 in jamaica
+92	1537808501.98	0.418	EH1 in heading
+93	1537808502.32	0.342	EY1 in today's
+94	1537808502.73	0.408	AW1 in without
+95	1537808503.05	0.315	AW1 in doubt
+96	1537808503.42	0.373	AO1 in more
+97	1537808503.89	0.476	AY1 in likely
+98	1537808504.28	0.391	IH1 in pick
+99	1537808504.59	0.31	AY1 in island
+100	1537808505.15	0.558	AO1 in offers
+101	1537808505.52	0.367	EY1 in associations
+102	1537808505.91	0.391	AW1 in thousands
+103	1537808506.49	0.577	IH1 in visit
+104	1537808506.8	0.313	EY1 in barbados
+105	1537808507.22	0.421	IY1 in beaches
+106	1537808507.58	0.359	AW1 in mountains
+107	1537808508.1	0.516	AA1 in large
+108	1537808508.66	0.565	AH1 in number
+109	1537808509.02	0.358	IH1 in visitors
+110	1537808509.34	0.318	UW1 in blue
+end	1537808510.29	0.95	

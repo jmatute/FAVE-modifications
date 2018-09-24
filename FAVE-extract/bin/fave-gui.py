@@ -104,7 +104,7 @@ class Application(Frame):
        
         os.chdir("../")
         subprocess.call(["./Run.sh"])
-        
+        os.chdir("./bin") 
 
     def ChangeMeanPath(self):
         newPath = tkFileDialog.askopenfilename(initialdir = "../",title = "Select means file")
@@ -167,7 +167,7 @@ class Application(Frame):
                  distances.append(distance)
                  print  measurement.lexical_set, measurement.vowel, measurement.plotnik_code, distance
               value = min(distances)
-              txt += measurement.lexical_set +"\t"+ measurement.vowel +"\t" + measurement.plotnik_code + "\t"+  str(value) + "\r\n" 
+              txt += measurement.word +"\t" + measurement.lexical_set +"\t"+ measurement.vowel +"\t" + measurement.plotnik_code + "\t"+  str(value) + "\r\n" 
               totalMeasurement += 1
               avg_dist += value
            avg_dist /= totalMeasurement
