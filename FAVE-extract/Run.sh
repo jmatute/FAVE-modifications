@@ -6,8 +6,11 @@
 #the start of the line... and this will add the option of the fave extract run.
 #For the speakers files and gender info, only modify the speakersdata.csv included 
 
-OPTIONS=""
+echo $SCRIPT_METHOD
+echo $MEAN_FILE
+echo $COV_FILE
 
+OPTIONS=""
 
 #If the option does not need an input, then just put the pound symbol infront of the line to disable
 #that option
@@ -20,7 +23,7 @@ OPTIONS="${OPTIONS} --case ${CASE}"
 
 #############################################################
 #TYPE=plotnik  
-TYPE=lexical
+TYPE=$SCRIPT_METHOD
 # possible types are plotnik, lexical, arpabet... the means and covariances
 # are dependent on this value so make sure means and covariance file relate to it
 OPTIONS="${OPTIONS} --vowelMeasurementType ${TYPE}"
@@ -30,13 +33,13 @@ OPTIONS="${OPTIONS} --vowelMeasurementType ${TYPE}"
 
 #MEANSFILE=plotnik_without_frederik_means.txt 
 #MEANSFILE=means.txt
-MEANSFILE=lexical_without_frederik_means.txt 
+MEANSFILE=$MEAN_FILE 
 OPTIONS="${OPTIONS} --means ${MEANSFILE}"
 
 #########################################################################
 #COVARIANCESFILE=covs.txt
 #COVARIANCESFILE=plotnik_without_frederik_covs.txt
-COVARIANCESFILE=lexical_without_frederik_covs.txt
+COVARIANCESFILE=$COV_FILE  #lexical_without_frederik_covs.txt
 OPTIONS="${OPTIONS} --covariances ${COVARIANCESFILE}"
 
 
