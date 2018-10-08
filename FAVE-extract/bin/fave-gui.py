@@ -146,7 +146,9 @@ class Application(Frame):
 
     def CreateComparison(self):
         manualComparisonMeasurements = LoadData(self.manualResult.get())
+        print "Manual measurements ", len(manualComparisonMeasurements)
         faveMeasurements = LoadDataFave(self.faveResult.get())
+        print "Total fave measurements ", len(faveMeasurements)
         speakers = set(map(lambda x:x.GetSpeakerName(), faveMeasurements))
         txt = ""
         for speaker in speakers:
