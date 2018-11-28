@@ -927,7 +927,7 @@ def getVowelMeasurement(vowelFileStem, p, w, speechSoftware, formantPredictionMe
             # get measurements for nFormants = 3, 4, 5, 6,7
             LPCs = []
             nFormants = 3
-            while nFormants <= 7:
+            while nFormants <= 6:
                 command =os.path.join(PRAATPATH, PRAATNAME) + ' ' + os.path.join(SCRIPTS_HOME, 'extractFormants.praat') + ' ' + vowelWavFile + ' ' + str(nFormants) + ' ' + str(maxFormant) + ' ' ' ' + str(windowSize) + ' ' + str(preEmphasis) + ' burg'
                 
                 fname = vowelWavFile[-7:]
@@ -1016,7 +1016,10 @@ def getWordsAndPhones(tg, phoneset, speaker, vowelSystem):
                 count_vowels += 1         
                 key = word.transcription.lower() 
                 if key in lexical.LEX_DICT:
-                    phone.lexical = lexical.LEX_DICT[key] 
+                    phone.lexical = lexical.LEX_DICT[key]
+                else:
+                    key=word.transcription.lower()
+                    print "assumend not vowel" , key
         words.append(word)
 
     # add Plotnik-style codes for the preceding and following segments for all
