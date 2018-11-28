@@ -383,6 +383,9 @@ def LoadData(filePath):
        measurement.cd = measurement.plotnik_code
        
        measurement.fifty_percent = [float(x) if x != "" else 0 for x in dataLine[32:38]]
+       measurement.fifty_percent[3] = math.log(measurement.fifty_percent[3])
+       measurement.fifty_percent[4] = math.log(measurement.fifty_percent[4])
+
        #52,53 F1,F2 20%
        measurement.twenty_percent = [float(x) if x != "" else 0 for x in dataLine[57:59]]
        #60,61 F1,F2,80%
@@ -469,12 +472,11 @@ if  __name__ == "__main__":
        keys = set([x.lexical_set for x in actualManualMeasurements])
     elif typeOfOutput == "P": # apply arpabet
        keys = set([x.plotnik_code for x in actualManualMeasurements])
-    
+    normalize = True
     means, covariances = calculateMeansAndCovariances(keys, actualManualMeasurements, typeOfOutput, normalize)
+	
     
     SaveToPath(outputName,means, covariances)
-
-
 
 
 
