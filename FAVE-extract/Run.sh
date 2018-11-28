@@ -6,9 +6,7 @@
 #the start of the line... and this will add the option of the fave extract run.
 #For the speakers files and gender info, only modify the speakersdata.csv included 
 
-echo $SCRIPT_METHOD
-echo $MEAN_FILE
-echo $COV_FILE
+
 
 OPTIONS=""
 
@@ -22,8 +20,8 @@ CASE=lower
 OPTIONS="${OPTIONS} --case ${CASE}"
 
 #############################################################
-#TYPE=plotnik  
-TYPE=$SCRIPT_METHOD
+#TYPE=plotnik
+TYPE=lexical
 # possible types are plotnik, lexical, arpabet... the means and covariances
 # are dependent on this value so make sure means and covariance file relate to it
 OPTIONS="${OPTIONS} --vowelMeasurementType ${TYPE}"
@@ -33,13 +31,13 @@ OPTIONS="${OPTIONS} --vowelMeasurementType ${TYPE}"
 
 #MEANSFILE=plotnik_without_frederik_means.txt 
 #MEANSFILE=means.txt
-MEANSFILE=$MEAN_FILE 
+MEANSFILE=1.1_lexical_studentsandteachersseparate_without1_withoutteachers_BLA_1_Michala_means.txt
 OPTIONS="${OPTIONS} --means ${MEANSFILE}"
 
 #########################################################################
 #COVARIANCESFILE=covs.txt
 #COVARIANCESFILE=plotnik_without_frederik_covs.txt
-COVARIANCESFILE=$COV_FILE  #lexical_without_frederik_covs.txt
+COVARIANCESFILE=1.1_lexical_studentsandteachersseparate_without1_withoutteachers_BLA_1_Michala_covs.txt  #lexical_without_frederik_covs.txt
 OPTIONS="${OPTIONS} --covariances ${COVARIANCESFILE}"
 
 
@@ -73,8 +71,8 @@ OPTIONS="${OPTIONS} --nSmoothing ${NSMOOTHING}"
 OPTIONS="${OPTIONS} --removeStopWords"
 
 #########################################################################
-OPTIONS="${OPTIONS} --onlyMeasureStressed"
-#OPTIONS="${OPTIONS} --measureStressed"
+#OPTIONS="${OPTIONS} --onlyMeasureStressed"
+OPTIONS="${OPTIONS} --measureStressed"
 
 #########################################################################
 OUTPUTFORMAT=txt
@@ -110,7 +108,7 @@ OPTIONS="${OPTIONS} --stopWordsFile ${STOPWORDLIST}"
 OPTIONS="${OPTIONS} --verbose"
 
 ##########################################################################
-OPTIONS="${OPTIONS} --padding" # Remove to not apply padding when getting formant tracks
+#OPTIONS="${OPTIONS} --padding" # Remove to not apply padding when getting formant tracks
 
 #########################################################################
 #OPTIONS="${OPTIONS} --keep"    #Keep the old formants 
